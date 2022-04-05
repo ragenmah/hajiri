@@ -96,6 +96,8 @@ const styles = StyleSheet.create({
     fontFamily: 'Inter',
     elevation: 10,
     // height: 358,
+    paddingBottom:10,
+    marginBottom:10
   },
 
   headerText: {
