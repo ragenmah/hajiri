@@ -19,8 +19,7 @@ to access your account.`}
         />
         <BodyContainer />
       </ScrollView>
-
-      {isKeyBoardOpen ? <View /> : <FooterContainer />}
+      <FooterContainer />
     </SafeAreaView>
   );
 };

@@ -29,6 +29,7 @@ const LogoContainer = () => {
           style={{marginTop: 7}}
         />
       </View>
+     
     </View>
   );
 };
