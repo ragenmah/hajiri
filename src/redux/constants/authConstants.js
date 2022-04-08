@@ -1,0 +1,3 @@
+export const POST_LOGIN = "POST_LOGIN"
+export const FORGET_PASSWORD = "FORGET_PASSWORD"
+export const RESET_PASSWORD = "RESET_PASSWORD"

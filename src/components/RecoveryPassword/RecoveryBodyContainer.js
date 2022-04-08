@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { View } from 'react-native';
 import { Button, TextInput } from 'react-native-paper';
+import { useNavigation } from '@react-navigation/native';
 
 const RecoveryBodyContainer = () => {
   const [email, setEmail] = useState('');
 
+  const navigation = useNavigation();
   return (
     <View style={{padding: 50}}>
       <TextInput
@@ -16,7 +18,7 @@ const RecoveryBodyContainer = () => {
         placeholder="johndoe@gmail.com"
         activeOutlineColor="#620A83"
         // backgroundColor="#803A9B"
-        autoFocus={true}
+        // autoFocus={true}
         style={{height: 54, backgroundColor: '#E5E5E5', color: '#000'}}
       />
 
@@ -33,11 +35,11 @@ const RecoveryBodyContainer = () => {
           fontSize:14,
           letterSpacing:1.24
         }}
-        onPress={() => console.log('Pressed')}>
+        onPress={() => navigation.navigate('CheckEmail')}>
         RESET MY PASSWORD
       </Button>
       <Button
-          onPress={() => console.log('lPressed')}
+          onPress={() => navigation.navigate('LoginScreen')}
           style={{fontSize: 5}}
           labelStyle={{
             fontSize: 12,

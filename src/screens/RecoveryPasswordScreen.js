@@ -21,7 +21,7 @@ const RecoveryPasswordScreen = () => {
         <RecoveryBodyContainer />
       </ScrollView>
 
-      {isKeyBoardOpen ? <View /> : <FooterContainer />}
+       <FooterContainer />
     </SafeAreaView>
   );
 };

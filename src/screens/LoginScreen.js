@@ -6,8 +6,8 @@ import BodyContainer from '../components/Login/BodyContainer';
 import FooterContainer from '../components/Login/FooterContainer';
 import {useKeyboard} from '../utils/useKeyboard';
 
-const LoginScreen = () => {
-  const isKeyBoardOpen = useKeyboard();
+const LoginScreen = ({navigation}) => {
+ 
   return (
     <SafeAreaView style={styles.scrollContainer}>
       <ScrollView>
@@ -17,7 +17,7 @@ const LoginScreen = () => {
           description={`Welcome to hajiri, please enter your credentials 
 to access your account.`}
         />
-        <BodyContainer />
+        <BodyContainer navigation={navigation}/>
       </ScrollView>
       <FooterContainer />
     </SafeAreaView>

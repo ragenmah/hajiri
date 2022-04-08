@@ -6,7 +6,9 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {routes, screens} from '../RouteItems';
 import {
   HomeStackNavigator,
+  LeaveRequestFormNavigator,
   LeaveRequestStackNavigator,
+  ProfileStackNavigator,
   TimeSheetStackNavigator,
 } from './MainStackNavigator';
 
@@ -14,8 +16,8 @@ const Tab = createBottomTabNavigator();
 
 const tabOptions = ({route}) => {
   const item = routes.find(routeItem => routeItem.name === route.name);
-
-  // if (!item?.showInTab) {
+// console.log(item?.showInTab)
+  // if (item?.showInTab===false) {
   //   return {
   //     tabBarButton: () => <View style={{width: 0}} />,
   //     headerShown: false,
@@ -23,6 +25,15 @@ const tabOptions = ({route}) => {
   //     title: item?.title,
   //   };
   // }
+  if(route.name==="ProfileStack"|| route.name==="LeaveRequestFormStack"){
+    return {
+      tabBarButton: () => <View style={{width: 0}} />,
+      headerShown: false,
+      tabBarStyle: styles.tabContainer,
+      title: item?.title, 
+     
+    };
+  }
 
   return {
     tabBarIcon: ({focused}) => item?.icon(focused),
@@ -31,7 +42,7 @@ const tabOptions = ({route}) => {
     ),
     headerShown: false,
     tabBarStyle: styles.tabContainer,
-    title: item?.title,
+    title: item?.title
   };
 };
 
@@ -47,17 +58,30 @@ const BottomTabNavigator = () => {
         name={screens.LeaveRequestStack}
         component={LeaveRequestStackNavigator}
       />
+      <Tab.Screen
+        name={screens.ProfileStack}
+        component={ProfileStackNavigator}
+      />
+       <Tab.Screen
+        name={screens.LeaveRequestFormStack}
+        component={LeaveRequestFormNavigator}
+      />
     </Tab.Navigator>
   );
 };
 
 const styles = StyleSheet.create({
   tabBarLabel: {
-    color: '#292929',
+    color: '#FCFCFC ',
     fontSize: 12,
+    marginBottom:8
   },
   tabContainer: {
     height: 60,
+    backgroundColor:"#9E6AB2",
+    letterSpacing:0.4,
+    padding:8,
+    color:"#FCFCFC "
   },
 });
 

@@ -1,20 +1,20 @@
 import React, { useState } from 'react';
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {StyleSheet, Text, TouchableHighlight, View} from 'react-native';
 
-const AttendanceButtons = () => {
-    const [checkinText, setCheckIn] = useState('check in');
+const AttendanceButtons = ({checkinText,toggleCheckIn,takeBreak}) => {
+    // const [checkinText, setCheckIn] = useState('check in');
     
   const toggleText = () => {};
   return (
     <View style={styles.mainContainer}>
-      <TouchableOpacity onPress={toggleText} style={styles.roundButton}>
+      <TouchableHighlight onPress={toggleCheckIn} style={styles.roundButton}>
         <Text style={styles.btnTextStyle}>{checkinText}</Text>
-      </TouchableOpacity>
-      <TouchableOpacity  style={[styles.roundButton,styles.btnTakeButton]}>
+      </TouchableHighlight>
+      <TouchableHighlight onPress={takeBreak} style={[styles.roundButton,styles.btnTakeButton]}>
         <Text style={[ styles.btnTextStyle,styles.btnTakeBreakStyle,]}>
           Take a Break
         </Text>
-      </TouchableOpacity>
+      </TouchableHighlight>
     </View>
   );
 };

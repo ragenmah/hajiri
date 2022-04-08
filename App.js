@@ -12,6 +12,7 @@ import LoginScreen from './src/screens/LoginScreen';
 import RecoveryPasswordScreen from './src/screens/RecoveryPasswordScreen';
 import CheckEmailScreen from './src/screens/CheckEmailScreen';
 import PageNotFound from './src/utils/PageNotFound';
+import LoginNavigation from './src/routes/othernavigations/LoginNavigation';
 
 const navigationRef = createRef();
 const nav = () => navigationRef.current;
@@ -22,8 +23,10 @@ const App = () => {
       <StatusBar barStyle="dark-content" />
       <NavigationContainer ref={navigationRef}>
         {/* <DrawerNavigator nav={nav} /> */}
-        {/* <LoginScreen/> */}
-        <PageNotFound/>
+        <LoginNavigation />
+        
+        {/* <LoginScreen /> */}
+        {/* <PageNotFound/> */}
         {/* <CheckEmailScreen/> */}
         {/* <SplashScreen Navigation={nav}/> */}
       </NavigationContainer>
