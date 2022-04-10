@@ -6,7 +6,7 @@ import { useNavigation } from '@react-navigation/native';
 const RecoveryBodyContainer = () => {
   const [email, setEmail] = useState('');
 
-  const navigation = useNavigation();
+    const navigation = useNavigation();
   return (
     <View style={{padding: 50}}>
       <TextInput

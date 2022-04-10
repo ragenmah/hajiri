@@ -3,13 +3,14 @@ import React, {useState} from 'react';
 import {Text, View} from 'react-native';
 import {TouchableHighlight} from 'react-native-gesture-handler';
 import {Button, Checkbox, TextInput} from 'react-native-paper';
+import {API_BASE_URL} from '../../utils/constants';
 
 const BodyContainer = ({navigation}) => {
   const [emailId, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [checked, setChecked] = useState(false);
   const [passwordVisible, setPasswordVisible] = useState(true);
-  const baseUrl = 'http://656c-103-41-172-114.in.ngrok.io/api';
+
   const [isLoading, setIsLoading] = useState(false);
   var SharedPreferences = require('react-native-shared-preferences');
   const data = {
@@ -27,35 +28,62 @@ const BodyContainer = ({navigation}) => {
   };
 
   const onSubmitFormHandler = async event => {
-    // if (!password.trim() || !emailId.trim()) {
-    //   alert("Enter valid email and password");
-    //   return;
-    // }
-    navigation.navigate('DashboardHome', {nav: navigation});
+    if (!password.trim() || !emailId.trim()) {
+      alert('Enter valid email and password');
+      return;
+    }
+    navigation.reset({
+      index: 0,
+      routes: [
+        {
+          name: 'DashboardHome',
+          params: {someParam: 'Param1'},
+        },
+      ],
+    });
     setIsLoading(true);
     try {
       axios
-        .post(
-          `http://656c-103-41-172-114.in.ngrok.io/api/auth/login`,
-          data,
-          options,
-        )
+        .post(`${API_BASE_URL}/auth/login`, data, options)
         .then(res => {
-          navigation.navigate('DashboardHome', {nav: navigation});
+          // navigation.navigate('DashboardHome', {nav: navigation});
           console.log(`TOKEN ==== : ${JSON.stringify(res.data['token'])}`);
-          SharedPreferences.setItem('token', JSON.stringify(res.data['token']));
-          // console.log(`RESPONSE ==== : ${JSON.stringify(res.data)}`);
-          SharedPreferences.getItem('token', function (value) {
-            console.log(`value token ${value}`);
+          SharedPreferences.clear();
+          console.log(`attendance token ${JSON.stringify(res.data['token'])} `);
+          SharedPreferences.setItem('token', res.data['token']);
+          handleRememberMe();
+          navigation.reset({
+            index: 0,
+            routes: [
+              {
+                name: 'DashboardHome',
+                params: {someParam: 'Param1'},
+              },
+            ],
           });
         })
         .catch(err => {
-          console.log('ERROR: ====', err);
+          console.log('1dERROR: ====', err);
         });
     } catch (error) {
       // alert("An error has occurred");
       console.log('error' + error);
-      setIsLoading(false);
+    }
+    setIsLoading(false);
+  };
+
+  const handleRememberMe = () => {
+   
+    if (checked) {
+      
+      if (!password.trim() || !emailId.trim()) {
+        alert('Enter valid email and password');
+        return;
+      }
+      SharedPreferences.setItem('setRememberMe', "true");
+      SharedPreferences.getItem('setRememberMe', function (value) {
+        console.log("checked" +value)
+      });
     }
   };
 
@@ -98,6 +126,7 @@ const BodyContainer = ({navigation}) => {
             status={checked ? 'checked' : 'unchecked'}
             onPress={() => {
               setChecked(!checked);
+             
             }}
             color="#620A83"
           />

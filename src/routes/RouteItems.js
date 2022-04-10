@@ -11,8 +11,10 @@ export const screens = {
   LeaveRequest: 'LeaveRequestScreen',
   Profile: 'ProfileScreen',
   ProfileStack: 'ProfileStack',
-  LeaveRequestForm:'LeaveRequestForm',
-  LeaveRequestFormStack:'LeaveRequestFormStack'
+  LeaveRequestForm: 'LeaveRequestForm',
+  LeaveRequestFormStack: 'LeaveRequestFormStack',
+  LogOut: 'LogOut',
+  LogOutStack: 'LogOutStack',
 };
 
 export const routes = [
@@ -82,7 +84,11 @@ export const routes = [
     showInTab: false,
     showInDrawer: false,
     icon: focused => (
-      <Icon name="check-all" size={30} color={focused ? '#803A9B' : '#FCFCFC'} />
+      <Icon
+        name="check-all"
+        size={30}
+        color={focused ? '#803A9B' : '#FCFCFC'}
+      />
     ),
   },
 
@@ -93,7 +99,11 @@ export const routes = [
     showInTab: true,
     showInDrawer: false,
     icon: focused => (
-      <Icon name="check-all" size={30} color={focused ? '#803A9B' : '#FCFCFC'} />
+      <Icon
+        name="check-all"
+        size={30}
+        color={focused ? '#803A9B' : '#FCFCFC'}
+      />
     ),
   },
   {
@@ -103,7 +113,11 @@ export const routes = [
     showInTab: false,
     showInDrawer: false,
     icon: focused => (
-      <Icon name="check-all" size={30} color={focused ? '#803A9B' : '#FCFCFC'} />
+      <Icon
+        name="check-all"
+        size={30}
+        color={focused ? '#803A9B' : '#FCFCFC'}
+      />
     ),
   },
   {
@@ -113,9 +127,13 @@ export const routes = [
     showInTab: false,
     showInDrawer: true,
     icon: focused => (
-      <Icon name="check-all" size={30} color={focused ? '#803A9B' : '#FCFCFC'} />
+      <Icon
+        name="check-all"
+        size={30}
+        color={focused ? '#803A9B' : '#FCFCFC'}
+      />
     ),
-    iconImage:"Profile.png"
+    iconImage: 'Profile.png',
   },
   {
     name: screens.LeaveRequestForm,
@@ -124,7 +142,11 @@ export const routes = [
     showInTab: false,
     showInDrawer: false,
     icon: focused => (
-      <Icon name="check-all" size={30} color={focused ? '#803A9B' : '#FCFCFC'} />
+      <Icon
+        name="check-all"
+        size={30}
+        color={focused ? '#803A9B' : '#FCFCFC'}
+      />
     ),
   },
   {
@@ -134,8 +156,28 @@ export const routes = [
     showInTab: false,
     showInDrawer: false,
     icon: focused => (
-      <Icon name="check-all" size={30} color={focused ? '#803A9B' : '#FCFCFC'} />
+      <Icon
+        name="check-all"
+        size={30}
+        color={focused ? '#803A9B' : '#FCFCFC'}
+      />
     ),
-    iconImage:"Profile.png"
+    iconImage: 'Profile.png',
+  },
+
+  {
+    name: screens.LogOut,
+    focusedRoute: screens.LogOutStack,
+    title: 'Log Out',
+    showInTab: false,
+    showInDrawer: false,
+    icon: focused => (
+      <Icon
+        name="check-all"
+        size={30}
+        color={focused ? '#803A9B' : '#FCFCFC'}
+      />
+    ),
+    iconImage: 'Profile.png',
   },
 ];

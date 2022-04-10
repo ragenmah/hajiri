@@ -1,79 +1,92 @@
-import React, {useState} from 'react';
+import axios from 'axios';
+import React, {useEffect, useState} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import {Calendar, CalendarList, Agenda} from 'react-native-calendars';
 import DropDownPicker from 'react-native-dropdown-picker';
+import {API_BASE_URL} from '../../utils/constants';
+import Icon from 'react-native-vector-icons/AntDesign';
+import moment from 'moment';
 
-const CalendarAttendance = () => {
+const CalendarAttendance = ({token, userId}) => {
+  const [attendanceDate, setAttendanceDate] = useState([]);
+  const [currentDateTime, setcurrentDateTime] = useState(moment().format('YYYY-MM-DD'));
+ 
+  useEffect(() => {
+    try {
+      axios
+        .get(`${API_BASE_URL}/attendances`, {
+          headers: {
+            accept: 'application/json',
+            Authorization: 'Bearer ' + token,
+          },
+        })
+        .then(res => {
+          console.log(res.data);
+        })
+        .catch(err => console.log(err));
+    } catch (error) {
+      console.error(error);
+    }
+  });
+
   return (
     <View style={styles.cardContainer}>
       <Calendar
-        // // Initially visible month. Default = now
-        // current={'2022-04-01'}
-        // // Minimum date that can be selected, dates before minDate will be grayed out. Default = undefined
-        // minDate={'2012-05-10'}
-        // // Maximum date that can be selected, dates after maxDate will be grayed out. Default = undefined
-        // maxDate={'2012-05-30'}
-        // // Handler which gets executed on day press. Default = undefined
-        // onDayPress={day => {
-        //   console.log('selected day', day);
-        // }}
-        // // Handler which gets executed on day long press. Default = undefined
-        // onDayLongPress={day => {
-        //   console.log('selected day', day);
-        // }}
-        // // Month format in calendar title. Formatting values: http://arshaw.com/xdate/#Formatting
-        // monthFormat={'yyyy MM'}
-        // // Handler which gets executed when visible month changes in calendar. Default = undefined
-        // onMonthChange={month => {
-        //   console.log('month changed', month);
-        // }}
-        // // Hide month navigation arrows. Default = false
-        // hideArrows={true}
-        // // Replace default arrows with custom ones (direction can be 'left' or 'right')
-        // renderArrow={direction => <Arrow />}
-        // // Do not show days of other months in month page. Default = false
-        // hideExtraDays={true}
-        // // If hideArrows = false and hideExtraDays = false do not switch month when tapping on greyed out
-        // // day from another month that is visible in calendar page. Default = false
-        // disableMonthChange={false}
-        // // If firstDay=1 week starts from Monday. Note that dayNames and dayNamesShort should still start from Sunday
-        // firstDay={1}
-        // // Hide day names. Default = false
-        // hideDayNames={false}
-        // // Show week numbers to the left. Default = false
-        // showWeekNumbers={true}
-        // // Handler which gets executed when press arrow icon left. It receive a callback can go back month
-        // onPressArrowLeft={subtractMonth => subtractMonth()}
-        // // Handler which gets executed when press arrow icon right. It receive a callback can go next month
-        // onPressArrowRight={addMonth => addMonth()}
-        // // Disable left arrow. Default = false
-        // disableArrowLeft={false}
-        // // Disable right arrow. Default = false
-        // disableArrowRight={false}
-        // // Disable all touch events for disabled days. can be override with disableTouchEvent in markedDates
-        // disableAllTouchEventsForDisabledDays={true}
-        // // Replace default month and year title with custom one. the function receive a date as parameter
-        // renderHeader={date => {
-        //   /*Return JSX*/
-        // }}
-        // // Enable the option to swipe between months. Default = false
-        enableSwipeMonths={true}
-        markingType={'period'}
+        current={new Date()}
+        // Handler which gets executed on day press. Default = undefined
+        onDayPress={day => {
+          console.log('selected day', day);
+        }}
+       renderArrow={direction =>
+          direction === 'left' ? (
+            <View style={styles.roundCard}>
+              <Icon name="left" size={20} color="#fff" />
+            </View>
+          ) : (
+            <View style={styles.roundCard}>
+              <Icon name="right" size={20} color="#fff" />
+            </View>
+          )
+        }
+        hideExtraDays={true}
+       enableSwipeMonths={true}
+        markingType={'custom'}
         markedDates={{
-          '2022-04-01': {textColor: 'green'},
-          '2022-04-02': {startingDay: true, color: 'green'},
-          '2022-04-03': {
-            selected: true,
-            endingDay: true,
-            color: 'green',
-            textColor: 'gray',
+          // '2022-04-01': {textColor: 'green'},
+          // '2022-04-02': {startingDay: true, color: 'green'},
+          // '2022-04-03': {
+          //   selected: true,
+          //   endingDay: true,
+          //   color: 'green',
+          //   textColor: 'gray',
+          // },
+
+          '2022-04-05': {
+            customStyles: {
+              container: {
+               borderTopWidth:4,
+                borderTopColor:'#43C741',
+                borderRadius:0
+              },
+              text: {
+                color: 'black',
+                fontWeight: 'bold',
+              },
+            },
           },
-          '2022-04-04': {
-            disabled: true,
-            startingDay: true,
-            color: 'green',
-            endingDay: true,
-          },
+          // currentDateTime:  {
+          //   customStyles: {
+          //     container: {
+          //      borderTopWidth:4,
+          //       borderTopColor:'#43C741',
+          //       borderRadius:0
+          //     },
+          //     text: {
+          //       color: 'black',
+          //       fontWeight: 'bold',
+          //     },
+          //   },
+          
         }}
       />
     </View>
@@ -95,7 +108,15 @@ const styles = StyleSheet.create({
     elevation: 10,
     // height: 358,
   },
-
+  roundCard: {
+    borderRadius: 100,
+    width: 25,
+    height: 25,
+    backgroundColor: '#E7E7E7',
+    marginLeft: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   headerText: {
     color: '#1F1F1F',
     // left: 24,

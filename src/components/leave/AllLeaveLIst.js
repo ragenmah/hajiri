@@ -16,9 +16,9 @@ const AllLeaveLIst = () => {
         renderItem={renderItem}
         ListEmptyComponent={emptyView}
       /> */}
-      <LeaveCard />
-      <LeaveCard />
-      <LeaveCard />
+      <LeaveCard fromDate={'01/02/2022'} toDate={'01/02/2022'}/>
+      <LeaveCard fromDate={'01/02/2022'} toDate={'01/02/2022'}/>
+      <LeaveCard fromDate={'01/02/2022'} toDate={'01/02/2022'}/>
     </View>
   );
 };

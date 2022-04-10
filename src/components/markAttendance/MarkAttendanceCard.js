@@ -1,9 +1,12 @@
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, Text, View, ToastAndroid} from 'react-native';
+import {StyleSheet, Text, View, ToastAndroid, alert} from 'react-native';
 import moment from 'moment';
 import ShowTimeCard from './ShowTimeCard';
 import AttendanceButtons from './AttendanceButtons';
 import BackgroundTimer from 'react-native-background-timer';
+import {API_BASE_URL} from '../../utils/constants';
+import getToken from '../../utils/getToken';
+import axios, {Axios} from 'axios';
 
 const MarkAttendanceCard = () => {
   const [isTimerStart, setIsTimerStart] = useState(false);
@@ -18,6 +21,7 @@ const MarkAttendanceCard = () => {
   const [checkoutTime, setCheckOutTime] = useState('');
 
   const [workTime, setWorkTime] = useState('0h 0m');
+  const [isLoading, setIsLoading] = useState(false);
 
   const startTimer = () => {
     BackgroundTimer.runBackgroundTimer(() => {
@@ -73,7 +77,7 @@ const MarkAttendanceCard = () => {
   const calculateWorkTime = (checkin, checkout) => {
     console.log(checkin);
     var diffr = moment.duration(moment(checkout).diff(moment(checkin)));
-    if (diffr >0) {
+    if (diffr > 0) {
       var hours = parseInt(diffr.asHours());
       var minutes = parseInt(diffr.minutes());
       var seconds = parseInt(diffr.seconds());
@@ -84,7 +88,97 @@ const MarkAttendanceCard = () => {
       setWorkTime(d);
     }
   };
+  var SharedPreferences = require('react-native-shared-preferences');
+  const [userToken, setUserToken] = useState('');
+  useEffect(() => {
+    SharedPreferences.getItem('token', function (value) {
+      // console.log(`value token ${value}`);
+      setUserToken(value);
+    });
+  });
+  const instance = axios.create({
+    baseURL: `${API_BASE_URL}`,
+    timeout: 1000,
+    headers: {Authorization: 'Bearer ' + userToken},
+  });
 
+  let currentTime = moment().format('h:mm a');
+  let currentDateTime = moment().format('YYYY-MM-DD hh:mm:ss');
+  const saveCheckInTime = async () => {
+    setIsLoading(true);
+    console.log(`Bearer ${userToken.toString()}`);
+    setCheckin(currentTime);
+    setCheckinTime(currentDateTime);
+    setIsTimerStart(!isTimerStart);
+    showToastMessage(checkin);
+    instance
+      .post('/attendances/check-in', {
+        headers: {
+          Authorization: `Bearer ${userToken}`,
+        },
+      })
+      .then(res => {
+        // console.log(res);
+      })
+      .catch(err => console.log(err));
+    setIsLoading(false);
+  };
+
+  const saveCheckOutTime = async () => {
+    setIsLoading(true);
+    console.log(`Bearer ${userToken.toString()}`);
+    setCheckOut(currentTime);
+    setCheckOutTime(currentDateTime);
+    setIsTimerStart(!isTimerStart);
+    calculateWorkTime(checkinTime, checkoutTime);
+    showToastMessage(checkout);
+    instance
+      .post('/attendances/check-out', {
+        headers: {
+          Authorization: `Bearer ${userToken}`,
+        },
+      })
+      .then(res => {
+        // console.log(res);
+      })
+      .catch(err => console.log(err));
+    setIsLoading(false);
+  };
+
+  const saveBreak=()=>{
+    setIsLoading(true);
+    console.log(`Bearer ${userToken.toString()}`);
+   
+    instance
+      .post('/break-records/break-start', {
+        headers: {
+          Authorization: `Bearer ${userToken}`,
+        },
+      })
+      .then(res => {
+        // console.log(res);
+      })
+      .catch(err => console.log(err));
+    setIsLoading(false);
+  }
+
+  const saveEndBreak=()=>{
+    setIsLoading(true);
+    console.log(`break Bearer ${userToken.toString()}`);
+   
+    instance
+      .post('/break-records/break-end', {
+        headers: {
+          Authorization: `Bearer ${userToken}`,
+        },
+      })
+      .then(res => {
+        // console.log(res);
+      })
+      .catch(err => console.log(err));
+    setIsLoading(false);
+  }
+ 
   return (
     <View style={styles.cardContainer}>
       <Text style={styles.headerText}>Mark Attendance</Text>
@@ -122,23 +216,24 @@ const MarkAttendanceCard = () => {
       <View style={styles.paddinfBtnBottom}>
         <AttendanceButtons
           checkinText={!isTimerStart ? 'check in' : 'check out'}
+          showCheckInIndicator={isLoading}
           toggleCheckIn={() => {
-            let currentTime = moment().format('h:mm a');
-            let currentDateTime = moment().format('YYYY-MM-DD hh:mm:ss');
             if (!isTimerStart) {
-              setCheckin(currentTime);
-              setCheckinTime(currentDateTime);
-              setIsTimerStart(!isTimerStart);
-              showToastMessage(checkin);
+              saveCheckInTime();
             } else {
-              setCheckOut(currentTime);
-              setCheckOutTime(currentDateTime);
-              setIsTimerStart(!isTimerStart);
-              calculateWorkTime(checkinTime, checkoutTime);
-              showToastMessage(checkout);
+              saveCheckOutTime();
             }
           }}
-          takeBreak={() => setTimerOn(timerOn => !timerOn)}
+          breakText={!timerOn ? 'Take a Break' : 'Leave a Break'}
+
+          takeBreak={() => {
+            setTimerOn(timerOn => !timerOn);
+            if (timerOn) {
+              saveBreak();
+            }else{
+              saveEndBreak();
+            }
+          }}
         />
       </View>
     </View>

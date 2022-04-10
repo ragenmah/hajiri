@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
-import {Text, View, StyleSheet} from 'react-native';
-import { TouchableHighlight } from 'react-native-gesture-handler';
+import {Text, View, StyleSheet,TouchableWithoutFeedback} from 'react-native';
+import { TouchableHighlight, TouchableOpacity } from 'react-native-gesture-handler';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import BottomsheetMessage from './BottomsheetMessage';
 
@@ -8,7 +8,7 @@ const LeaveCard = ({fromDate, toDate}) => {
   const refRBSheet = useRef();
   return (
     <View>
-      <TouchableHighlight
+      <TouchableWithoutFeedback
         onPress={() => {
           refRBSheet.current.open();
         }}>
@@ -16,23 +16,23 @@ const LeaveCard = ({fromDate, toDate}) => {
           <View>
             <View>
               <View>
-                <Text>From</Text>
-                <Text>{fromDate}</Text>
+                <Text style={styles.fromText}>From</Text>
+                <Text style={{fontWeight:'bold'}}>{fromDate}</Text>
               </View>
               <View>
-                <Text>To</Text>
-                <Text>{toDate}</Text>
+                <Text style={styles.fromText}>To</Text>
+                <Text style={{fontWeight:'bold'}}>{toDate}</Text>
               </View>
             </View>
           </View>
-          <View>
-            <View style={styles.roundCard}>
+          <View style={{justifyContent:'space-evenly',}}>
+            <View style={[styles.roundCard,{backgroundColor:"#43C741"}]}>
               <Text>s</Text>
             </View>
-            <Text>5 Days</Text>
+            <Text style={{color:"#803A9B",fontWeight:'bold'}}>5 Days</Text>
           </View>
         </View>
-      </TouchableHighlight>
+      </TouchableWithoutFeedback>
       <RBSheet
         ref={refRBSheet}
         closeOnDragDown={true}
@@ -61,10 +61,12 @@ const styles = StyleSheet.create({
     paddingLeft: 24,
     paddingTop: 16,
     paddingRight: 24,
+    paddingBottom:16,
     marginHorizontal: 16,
     fontFamily: 'Inter',
     elevation: 10,
-    // height: 358,
+    flexDirection:'row',
+    justifyContent:'space-between',
   },
 
   headerText: {
@@ -80,7 +82,12 @@ const styles = StyleSheet.create({
     height: 10,
     justifyContent: 'center',
     padding: 10,
-    backgroundColor: '#F4E0FB',
+   
     alignItems: 'center',
+    left:20,
+    elevation:10
   },
+  fromText:{
+    color:"#757575"
+  }
 });
