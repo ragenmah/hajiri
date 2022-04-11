@@ -21,7 +21,7 @@ const DashboardScreen = () => {
       setUserToken(value);
     });
     try {
-    
+    console.log("hello")
       axios
         .get(`${API_BASE_URL}/users/me`, {
           headers: {
@@ -46,11 +46,13 @@ const DashboardScreen = () => {
       console.error(error);
     }
   });
+
+
   return (
     <SafeAreaView style={styles.scrollContainer}>
       <ScrollView>
         <WelcomeCard firstName={firstName} />
-        <MarkAttendanceCard />
+        <MarkAttendanceCard userId={userId} />
         <CalendarAttendance token={userToken} userId={userId} />
         <AttendanceChart />
         <WorkingHoursChart />

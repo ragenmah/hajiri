@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, {useState} from 'react';
-import {Text, View} from 'react-native';
+import {Text, View, ActivityIndicator} from 'react-native';
 import {TouchableHighlight} from 'react-native-gesture-handler';
 import {Button, Checkbox, TextInput} from 'react-native-paper';
 import {API_BASE_URL} from '../../utils/constants';
@@ -32,15 +32,7 @@ const BodyContainer = ({navigation}) => {
       alert('Enter valid email and password');
       return;
     }
-    navigation.reset({
-      index: 0,
-      routes: [
-        {
-          name: 'DashboardHome',
-          params: {someParam: 'Param1'},
-        },
-      ],
-    });
+
     setIsLoading(true);
     try {
       axios
@@ -73,16 +65,14 @@ const BodyContainer = ({navigation}) => {
   };
 
   const handleRememberMe = () => {
-   
     if (checked) {
-      
       if (!password.trim() || !emailId.trim()) {
         alert('Enter valid email and password');
         return;
       }
-      SharedPreferences.setItem('setRememberMe', "true");
+      SharedPreferences.setItem('setRememberMe', 'true');
       SharedPreferences.getItem('setRememberMe', function (value) {
-        console.log("checked" +value)
+        console.log('checked' + value);
       });
     }
   };
@@ -126,7 +116,6 @@ const BodyContainer = ({navigation}) => {
             status={checked ? 'checked' : 'unchecked'}
             onPress={() => {
               setChecked(!checked);
-             
             }}
             color="#620A83"
           />
@@ -155,15 +144,18 @@ const BodyContainer = ({navigation}) => {
           justifyContent: 'center',
         }}
         onPress={onSubmitFormHandler}>
-        <Text
-          style={{
-            fontSize: 14,
-            letterSpacing: 1.24,
-            alignSelf: 'center',
-            color: '#fff',
-          }}>
-          LOG IN
-        </Text>
+        <View>
+          {isLoading ? <ActivityIndicator /> : <View></View>}
+          <Text
+            style={{
+              fontSize: 14,
+              letterSpacing: 1.24,
+              alignSelf: 'center',
+              color: '#fff',
+            }}>
+            LOG IN
+          </Text>
+        </View>
       </TouchableHighlight>
     </View>
   );

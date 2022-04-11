@@ -7,6 +7,7 @@ import {
 } from '@react-navigation/drawer';
 import Icon from 'react-native-vector-icons/Ionicons';
 import EvilIcon from 'react-native-vector-icons/EvilIcons';
+import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 
 import BottomTabNavigator from '../navigations/BottomTabNavigator';
 import {routes, screens} from '../RouteItems';
@@ -33,7 +34,7 @@ const CustomDrawerContent = props => {
               key={route.name}
               label={() => (
                 <View style={styles.drawerItemRow}>
-                  <EvilIcon name="user" size={25} color="#292D32" />
+                 { route.title === 'Log Out'?<SimpleLineIcons name="logout" size={20} color="#292D32"/>:<EvilIcon name="user" size={25} color="#292D32" />}
                   <Text
                     style={
                       focused ? styles.drawerLabelFocused : styles.drawerLabel
@@ -42,7 +43,19 @@ const CustomDrawerContent = props => {
                   </Text>
                 </View>
               )}
-              onPress={() => props.navigation.navigate(route.name)}
+              onPress={() => {
+                route.title === 'Log Out'
+                  ? props.navigation.reset({
+                      index: 0,
+                      routes: [
+                        {
+                          name: route.name,
+                          params: {someParam: 'Param1'},
+                        },
+                      ],
+                    })
+                  : props.navigation.navigate(route.name);
+              }}
               style={[
                 styles.drawerItem,
                 focused ? styles.drawerItemFocused : null,
@@ -67,16 +80,15 @@ const DrawerNavigator = () => {
         },
         drawerStyle: {
           marginTop: 56,
-          marginBottom: 60,
+          marginBottom: 55,
           backgroundColor: '#F9F9F9',
-          width:"58%",
+          width: '58%',
         },
 
         overlayColor: 'transparent',
         headerLeft: () => (
           <TouchableOpacity
             onPress={() => navigation.toggleDrawer()}
-            
             style={styles.headerLeft}>
             <Icon name="menu" size={25} color="#292D32" />
           </TouchableOpacity>
@@ -125,11 +137,13 @@ const styles = StyleSheet.create({
   // drawer content
   drawerLabel: {
     fontSize: 14,
+ marginLeft:10
   },
   drawerLabelFocused: {
     fontSize: 14,
     color: '#551E18',
     fontWeight: '500',
+    marginLeft:10
   },
   drawerItem: {
     height: 50,

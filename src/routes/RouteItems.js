@@ -13,8 +13,8 @@ export const screens = {
   ProfileStack: 'ProfileStack',
   LeaveRequestForm: 'LeaveRequestForm',
   LeaveRequestFormStack: 'LeaveRequestFormStack',
-  LogOut: 'LogOut',
-  LogOutStack: 'LogOutStack',
+  LogOut: 'LoginScreen',
+  LogOutStack: 'LoginScreen',
 };
 
 export const routes = [
@@ -27,7 +27,8 @@ export const routes = [
     icon: focused => (
       <Icon
         name="checkbox-marked-circle-outline"
-        size={30}
+        size={25}
+        style={{marginTop:4}}
         color={focused ? '#803A9B' : '#FCFCFC'}
       />
     ),
@@ -41,7 +42,8 @@ export const routes = [
     icon: focused => (
       <Icon
         name="checkbox-marked-circle-outline"
-        size={30}
+        size={25}
+        style={{marginTop:4}}
         color={focused ? '#803A9B' : '#FCFCFC'}
       />
     ),
@@ -56,7 +58,8 @@ export const routes = [
     icon: focused => (
       <Icon
         name="clock-time-three-outline"
-        size={30}
+        size={25}
+        style={{marginTop:4}}
         color={focused ? '#803A9B' : '#FCFCFC'}
       />
     ),
@@ -71,7 +74,8 @@ export const routes = [
     icon: focused => (
       <Icon
         name="clock-time-three-outline"
-        size={30}
+        size={25}
+        style={{marginTop:4}}
         color={focused ? '#803A9B' : '#FCFCFC'}
       />
     ),
@@ -86,7 +90,8 @@ export const routes = [
     icon: focused => (
       <Icon
         name="check-all"
-        size={30}
+        size={25}
+        style={{marginTop:4}}
         color={focused ? '#803A9B' : '#FCFCFC'}
       />
     ),
@@ -101,7 +106,8 @@ export const routes = [
     icon: focused => (
       <Icon
         name="check-all"
-        size={30}
+        size={25}
+        style={{marginTop:4}}
         color={focused ? '#803A9B' : '#FCFCFC'}
       />
     ),
@@ -115,7 +121,8 @@ export const routes = [
     icon: focused => (
       <Icon
         name="check-all"
-        size={30}
+        size={25}
+        style={{marginTop:4}}
         color={focused ? '#803A9B' : '#FCFCFC'}
       />
     ),
@@ -129,7 +136,8 @@ export const routes = [
     icon: focused => (
       <Icon
         name="check-all"
-        size={30}
+        size={25}
+        style={{marginTop:4}}
         color={focused ? '#803A9B' : '#FCFCFC'}
       />
     ),
@@ -144,7 +152,8 @@ export const routes = [
     icon: focused => (
       <Icon
         name="check-all"
-        size={30}
+        size={25}
+        style={{marginTop:4}}
         color={focused ? '#803A9B' : '#FCFCFC'}
       />
     ),
@@ -158,7 +167,8 @@ export const routes = [
     icon: focused => (
       <Icon
         name="check-all"
-        size={30}
+        size={25}
+        style={{marginTop:4}}
         color={focused ? '#803A9B' : '#FCFCFC'}
       />
     ),
@@ -170,11 +180,12 @@ export const routes = [
     focusedRoute: screens.LogOutStack,
     title: 'Log Out',
     showInTab: false,
-    showInDrawer: false,
+    showInDrawer: true,
     icon: focused => (
       <Icon
         name="check-all"
-        size={30}
+        size={25}
+        style={{marginTop:4}}
         color={focused ? '#803A9B' : '#FCFCFC'}
       />
     ),

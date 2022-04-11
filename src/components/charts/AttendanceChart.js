@@ -21,25 +21,7 @@ const AttendanceChart = () => {
     {label: 'Monthly', value: 'Monthly'},
     {label: 'Yearly', value: 'Yearly'},
   ]);
-  const data = {
-    labels: ["January", "February", "March", "April", "May", "June"],
-    datasets: [
-      {
-        data: [20, 45, 28, 80, 99, 43]
-      }
-    ]
-  };
-  const screenWidth = Dimensions.get("window").width;
-  const chartConfig = {
-    backgroundGradientFrom: "#1E2923",
-    backgroundGradientFromOpacity: 0,
-    backgroundGradientTo: "#08130D",
-    backgroundGradientToOpacity: 0.5,
-    color: (opacity = 1) => `rgba(26, 255, 146, ${opacity})`,
-    strokeWidth: 2, // optional, default 3
-    barPercentage: 0.5,
-    useShadowColorFromDataset: false // optional
-  };
+  
   return (
     <View style={styles.cardContainer}>
       <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
@@ -60,7 +42,7 @@ const AttendanceChart = () => {
           }}
           containerStyle={{
             width: 105,
-            height: 90,
+            // height: 90,
           }}
           textStyle={{
             color: '#620A83',
@@ -132,7 +114,10 @@ const styles = StyleSheet.create({
     textTransform: 'capitalize',
   },
   graphContainer: {
-    padding: 10,
+    // padding: 10,
+    margin:10,
+    paddingTop:10,
+    paddingBottom:10,
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
@@ -143,12 +128,12 @@ const styles = StyleSheet.create({
   roundGraphCard: {
     position: 'absolute',
     borderRadius: 100,
-    width: 100,
-    height: 100,
+    width: 80,
+    height: 80,
     justifyContent: 'center',
     alignItems: 'center',
     padding: 10,
-    backgroundColor: '#F4E0FB',
+    backgroundColor: '#E7E7E7',
   },
   graphValue: {
     fontSize: 20,

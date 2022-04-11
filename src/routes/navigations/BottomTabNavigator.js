@@ -37,9 +37,12 @@ const tabOptions = ({route}) => {
 
   return {
     tabBarIcon: ({focused}) => item?.icon(focused),
-    tabBarLabel: () => (
-      <Text style={styles.tabBarLabel}>{item?.title || ''}</Text>
-    ),
+    // tabBarLabel: () => (
+    //   <Text style={styles.tabBarLabel}>{item?.title || ''}</Text>
+    // ),
+    tabBarLabel:({focused, color, size}) => (
+      <Text style={[styles.tabBarLabel,{color: focused ? '#803A9B' : '#FCFCFC'}]}>{item?.title || ''}</Text>),
+      tabBarActiveBackgroundColor: '#FCFCFC',
     headerShown: false,
     tabBarStyle: styles.tabContainer,
     title: item?.title
@@ -77,10 +80,10 @@ const styles = StyleSheet.create({
     marginBottom:8
   },
   tabContainer: {
-    height: 60,
+    height: 55,
     backgroundColor:"#9E6AB2",
     letterSpacing:0.4,
-    padding:8,
+    // margin:8,
     color:"#FCFCFC "
   },
 });

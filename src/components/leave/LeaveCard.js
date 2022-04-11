@@ -1,6 +1,9 @@
-import React, { useRef } from 'react';
-import {Text, View, StyleSheet,TouchableWithoutFeedback} from 'react-native';
-import { TouchableHighlight, TouchableOpacity } from 'react-native-gesture-handler';
+import React, {useRef} from 'react';
+import {Text, View, StyleSheet, TouchableWithoutFeedback} from 'react-native';
+import {
+  TouchableHighlight,
+  TouchableOpacity,
+} from 'react-native-gesture-handler';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import BottomsheetMessage from './BottomsheetMessage';
 
@@ -17,19 +20,19 @@ const LeaveCard = ({fromDate, toDate}) => {
             <View>
               <View>
                 <Text style={styles.fromText}>From</Text>
-                <Text style={{fontWeight:'bold'}}>{fromDate}</Text>
+                <Text style={{fontWeight: 'bold'}}>{fromDate}</Text>
               </View>
               <View>
                 <Text style={styles.fromText}>To</Text>
-                <Text style={{fontWeight:'bold'}}>{toDate}</Text>
+                <Text style={{fontWeight: 'bold'}}>{toDate}</Text>
               </View>
             </View>
           </View>
-          <View style={{justifyContent:'space-evenly',}}>
-            <View style={[styles.roundCard,{backgroundColor:"#43C741"}]}>
+          <View style={{justifyContent: 'space-evenly'}}>
+            <View style={[styles.roundCard, {backgroundColor: '#43C741'}]}>
               <Text>s</Text>
             </View>
-            <Text style={{color:"#803A9B",fontWeight:'bold'}}>5 Days</Text>
+            <Text style={{color: '#803A9B', fontWeight: 'bold'}}>5 Days</Text>
           </View>
         </View>
       </TouchableWithoutFeedback>
@@ -61,12 +64,13 @@ const styles = StyleSheet.create({
     paddingLeft: 24,
     paddingTop: 16,
     paddingRight: 24,
-    paddingBottom:16,
+    paddingBottom: 16,
     marginHorizontal: 16,
     fontFamily: 'Inter',
     elevation: 10,
-    flexDirection:'row',
-    justifyContent:'space-between',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 5,
   },
 
   headerText: {
@@ -82,12 +86,12 @@ const styles = StyleSheet.create({
     height: 10,
     justifyContent: 'center',
     padding: 10,
-   
+
     alignItems: 'center',
-    left:20,
-    elevation:10
+    left: 20,
+    elevation: 10,
   },
-  fromText:{
-    color:"#757575"
-  }
+  fromText: {
+    color: '#757575',
+  },
 });

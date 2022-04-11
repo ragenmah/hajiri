@@ -20,21 +20,22 @@ const WorkingHoursChart = () => {
   };
   const screenWidth = Dimensions.get('window').width * 0.8;
   const chartConfig = {
-    // backgroundGradientFrom: '#1E2923',
-    // backgroundGradientFromOpacity: 0,
-    // backgroundGradientTo: '#08130D',
-    // backgroundGradientToOpacity: 0.5,
-    backgroundColor:"#000",
+    backgroundGradientFrom: '#fff',
+    backgroundGradientFromOpacity: 10,
+    backgroundGradientTo: '#fff',
+    backgroundGradientToOpacity: 10,
+    // backgroundColor:"transparent",
     // color: "#0000",
-    color: (opacity = 0) => `rgba(26, 255, 146, ${opacity})`,
-    // strokeWidth: 2, // optional, default 3
+    // color: (opacity = 0) => `rgba(26, 255, 146, ${1})`,
+    color: () => '#FFC738',
+    strokeWidth: 1, // optional, default 3
     barPercentage: 0.5,
     // useShadowColorFromDataset: false, // optional
   };
   return (
     <View style={styles.cardContainer}>
       <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-        <Text style={styles.headerText}>Workin Hours</Text>
+        <Text style={styles.headerText}>Working Hours</Text>
         <DropDownPicker
           open={open}
           value={value}
@@ -51,7 +52,7 @@ const WorkingHoursChart = () => {
           }}
           containerStyle={{
             width: 105,
-            height: 90,
+            height: 60,
           }}
           textStyle={{
             color: '#620A83',
@@ -67,9 +68,9 @@ const WorkingHoursChart = () => {
 
       <BarChart
         style={{
-            // backgroundColor:"#fff",
-        //   marginVertical: 8,
-        //   borderRadius: 16,
+            backgroundColor:"transparent",
+          // marginVertical: 8,
+          // borderRadius: 16,
         }}
         data={data}
         width={screenWidth}
