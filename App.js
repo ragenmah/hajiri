@@ -1,36 +1,24 @@
 import React, {createRef} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
-import MainApp, {MyDrawer} from './src/MainApp';
-import CustomAppBar from './src/components/customAppBar/CustomAppBar';
-
-// import DrawerNavigator from './src/routes/DrawerNavigator';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {StatusBar, StyleSheet} from 'react-native';
-import DrawerNavigator from './src/routes/navigations/DrawerNavigator';
-import SplashScreen from './src/screens/SplashScreen';
-import LoginScreen from './src/screens/LoginScreen';
-import RecoveryPasswordScreen from './src/screens/RecoveryPasswordScreen';
-import CheckEmailScreen from './src/screens/CheckEmailScreen';
-import PageNotFound from './src/utils/PageNotFound';
 import LoginNavigation from './src/routes/othernavigations/LoginNavigation';
+import store from './src/redux/store';
+import {Provider} from 'react-redux';
 
 const navigationRef = createRef();
 const nav = () => navigationRef.current;
 
 const App = () => {
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <StatusBar barStyle="dark-content" />
+    <Provider store={store}>
       <NavigationContainer ref={navigationRef}>
-        {/* <DrawerNavigator nav={nav} /> */}
+        {/* <SafeAreaView style={styles.safeArea}> */}
+        {/* <StatusBar barStyle="dark-content" /> */}
         <LoginNavigation />
-        
-        {/* <LoginScreen /> */}
-        {/* <PageNotFound/> */}
-        {/* <CheckEmailScreen/> */}
-        {/* <SplashScreen Navigation={nav}/> */}
+        {/* </SafeAreaView> */}
       </NavigationContainer>
-    </SafeAreaView>
+    </Provider>
   );
 };
 

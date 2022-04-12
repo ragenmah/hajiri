@@ -1,17 +1,16 @@
-import React, { useEffect } from 'react';
+import React, {useEffect} from 'react';
 import Onboarding from 'react-native-onboarding-swiper';
 import {Image, View, Button} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 
 const OnboardingScreen = () => {
- 
   const navigation = useNavigation();
   var SharedPreferences = require('react-native-shared-preferences');
   // const [isOnBoarded, setisOnBoarded] = useState(false);
 
   useEffect(() => {
     SharedPreferences.getItem('onboardLoaded', function (value) {
-      if (value==="true") {
+      if (value === 'true') {
         gotoSplash();
       }
     });
@@ -32,11 +31,11 @@ const OnboardingScreen = () => {
       showPagination
       onSkip={() => {
         gotoSplash();
-        SharedPreferences.setItem('onboardLoaded', "true");
+        SharedPreferences.setItem('onboardLoaded', 'true');
       }}
       onDone={() => {
         gotoSplash();
-        SharedPreferences.setItem('onboardLoaded', "true");
+        SharedPreferences.setItem('onboardLoaded', 'true');
       }}
       pages={[
         {
@@ -48,6 +47,8 @@ const OnboardingScreen = () => {
               // resizeMode="contain"
             />
           ),
+          title: '',
+          subtitle: '',
         },
         {
           backgroundColor: '#FCFCFC',
@@ -58,6 +59,8 @@ const OnboardingScreen = () => {
               // resizeMode="contain"
             />
           ),
+          title: '',
+          subtitle: '',
         },
         {
           backgroundColor: '#FCFCFC',
@@ -68,6 +71,9 @@ const OnboardingScreen = () => {
               // resizeMode="contain"
             />
           ),
+
+          title: '',
+          subtitle: '',
         },
       ]}
     />

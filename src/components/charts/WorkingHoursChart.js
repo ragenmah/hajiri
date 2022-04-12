@@ -1,37 +1,25 @@
 import React, {useState} from 'react';
 import {Dimensions, StyleSheet, Text, View} from 'react-native';
-import {BarChart} from 'react-native-chart-kit';
+// import {BarChart} from 'react-native-chart-kit';
 import DropDownPicker from 'react-native-dropdown-picker';
 
+// import {BarChart, Grid, YAxis, XAxis} from 'react-native-svg-charts';
+import {BarChart, Grid} from 'react-native-svg-charts';
+import {transformDataForBarChart} from '../../redux/actions/workHoursActions';
+
 const WorkingHoursChart = () => {
+  const data5 = [10, 20, 60, 30, 5, 90, 21, 47, 68, 88, 96, 55, 10, 73];
+  const dataWithPickedColors = data5.map(item =>
+    transformDataForBarChart(item),
+  );
+
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(null);
   const [items, setItems] = useState([
     {label: 'Monthly', value: 'Monthly'},
     {label: 'Yearly', value: 'Yearly'},
   ]);
-  const data = {
-    labels: ['1', '2', '3', '4', '5', '6','7'],
-    datasets: [
-      {
-        data: [5, 8, 10, 55, 44, 8,12],
-      },
-    ],
-  };
-  const screenWidth = Dimensions.get('window').width * 0.8;
-  const chartConfig = {
-    backgroundGradientFrom: '#fff',
-    backgroundGradientFromOpacity: 10,
-    backgroundGradientTo: '#fff',
-    backgroundGradientToOpacity: 10,
-    // backgroundColor:"transparent",
-    // color: "#0000",
-    // color: (opacity = 0) => `rgba(26, 255, 146, ${1})`,
-    color: () => '#FFC738',
-    strokeWidth: 1, // optional, default 3
-    barPercentage: 0.5,
-    // useShadowColorFromDataset: false, // optional
-  };
+
   return (
     <View style={styles.cardContainer}>
       <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
@@ -66,19 +54,21 @@ const WorkingHoursChart = () => {
         />
       </View>
 
-      <BarChart
-        style={{
-            backgroundColor:"transparent",
-          // marginVertical: 8,
-          // borderRadius: 16,
-        }}
-        data={data}
-        width={screenWidth}
-        height={220}
-        // yAxisLabel="$"
-        chartConfig={chartConfig}
-        // verticalLabelRotation={30}
-      />
+      <View>
+        <BarChart
+          style={{height: 220}}
+          spacingInner={0.1}
+          gridMin={-10}
+          gridMax={120}
+          data={dataWithPickedColors}
+          yAccessor={({item}) => item.value}
+          contentInset={{top: 30, bottom: 30}}>
+          <Grid></Grid>
+        </BarChart>
+        <View>
+          <View></View>
+        </View>
+      </View>
     </View>
   );
 };
@@ -97,8 +87,8 @@ const styles = StyleSheet.create({
     fontFamily: 'Inter',
     elevation: 10,
     // height: 358,
-    paddingBottom:10,
-    marginBottom:10
+    paddingBottom: 10,
+    marginBottom: 10,
   },
 
   headerText: {

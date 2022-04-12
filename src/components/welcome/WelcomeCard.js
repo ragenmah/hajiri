@@ -1,7 +1,7 @@
 import React from 'react';
 import {Text} from 'react-native';
 
-const WelcomeCard = ({firstName}) => {
+const   WelcomeCard = ({firstName}) => {
   return (
     <Text
       style={{

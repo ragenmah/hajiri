@@ -1,0 +1,107 @@
+import React from 'react';
+import {
+  Alert,
+  Modal,
+  StyleSheet,
+  Text,
+  Pressable,
+  View,
+  Platform,
+  TouchableHighlight,
+} from 'react-native';
+
+const CustomMsgAlert = props => {
+  return (
+    <Modal
+      animationType="fade"
+      transparent={true}
+      visible={props.modalVisible}
+      onRequestClose={() => {
+        props.setModalVisible(false);
+      }}>
+      <Pressable
+        style={[
+          Platform.OS === 'ios' ? styles.iOSBackdrop : styles.androidBackdrop,
+          styles.backdrop,
+        ]}
+        onPress={() => props.setModalVisible(false)}
+      />
+      <View>
+        <View style={[styles.cardContainer]}>
+          <View style={styles.horizontalLine}></View>
+          <View style={styles.cardInsideContainer}>
+            <Text style={{fontSize: 16, color: '#414141'}}>
+              {props.message}
+            </Text>
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                marginTop: 20,
+                marginBottom: 20,
+              }}>
+              <TouchableHighlight
+                style={{
+                  borderRadius: 15,
+                  backgroundColor: '#803A9B',
+                  //   marginTop: 25,
+                  height: 36,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  width: 90,
+                  marginRight: 0,
+                }}
+                onPress={() => {
+                  props.setModalVisible(false);
+                }}>
+                <Text style={{color: '#fff', letterSpacing: 1.24}}>OK</Text>
+              </TouchableHighlight>
+            </View>
+          </View>
+        </View>
+      </View>
+    </Modal>
+  );
+};
+
+export default CustomMsgAlert;
+
+const styles = StyleSheet.create({
+  cardContainer: {
+    backgroundColor: '#fff',
+    borderRadius: 20,
+    marginTop: '90%',
+    marginHorizontal: 25,
+    fontFamily: 'Inter',
+    elevation: 10,
+    // alignSelf:'center'
+  },
+  cardInsideContainer: {
+    paddingLeft: 24,
+    paddingTop: 16,
+    paddingRight: 24,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  horizontalLine: {
+    height: 10,
+    backgroundColor: '#803A9B',
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+  },
+  iOSBackdrop: {
+    backgroundColor: '#000000',
+    opacity: 0.3,
+  },
+  androidBackdrop: {
+    backgroundColor: '#232f34',
+    opacity: 0.32,
+  },
+  backdrop: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+  },
+});

@@ -1,110 +1,117 @@
 import axios from 'axios';
-import React, {useState} from 'react';
-import {Text, View, ActivityIndicator} from 'react-native';
+import React, {useRef, useState} from 'react';
+import {Text, View, ActivityIndicator, Keyboard} from 'react-native';
 import {TouchableHighlight} from 'react-native-gesture-handler';
 import {Button, Checkbox, TextInput} from 'react-native-paper';
+import {validateEmail, validatePassword} from '../../redux/actions/authActions';
 import {API_BASE_URL} from '../../utils/constants';
+import CustomMsgAlert from '../../utils/CustomMsgAlert';
 
-const BodyContainer = ({navigation}) => {
+const BodyContainer = ({
+  navigation,
+  authReducers,
+  postLogin,
+  handleRememberme,
+}) => {
   const [emailId, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [checked, setChecked] = useState(false);
   const [passwordVisible, setPasswordVisible] = useState(true);
 
   const [isLoading, setIsLoading] = useState(false);
-  var SharedPreferences = require('react-native-shared-preferences');
-  const data = {
-    // username: emailId,
-    // password: password,
-    username: 'superuser@example.com',
-    password: 'superuser',
-  };
+  const ref_input2 = useRef();
+  const ref_input1 = useRef();
 
-  const options = {
-    headers: {
-      'Content-Type': 'application/json',
-      accept: 'application/json',
-    },
-  };
-
-  const onSubmitFormHandler = async event => {
-    if (!password.trim() || !emailId.trim()) {
-      alert('Enter valid email and password');
-      return;
-    }
-
-    setIsLoading(true);
-    try {
-      axios
-        .post(`${API_BASE_URL}/auth/login`, data, options)
-        .then(res => {
-          // navigation.navigate('DashboardHome', {nav: navigation});
-          console.log(`TOKEN ==== : ${JSON.stringify(res.data['token'])}`);
-          SharedPreferences.clear();
-          console.log(`attendance token ${JSON.stringify(res.data['token'])} `);
-          SharedPreferences.setItem('token', res.data['token']);
-          handleRememberMe();
-          navigation.reset({
-            index: 0,
-            routes: [
-              {
-                name: 'DashboardHome',
-                params: {someParam: 'Param1'},
-              },
-            ],
-          });
-        })
-        .catch(err => {
-          console.log('1dERROR: ====', err);
-        });
-    } catch (error) {
-      // alert("An error has occurred");
-      console.log('error' + error);
-    }
-    setIsLoading(false);
-  };
-
-  const handleRememberMe = () => {
-    if (checked) {
-      if (!password.trim() || !emailId.trim()) {
-        alert('Enter valid email and password');
-        return;
-      }
-      SharedPreferences.setItem('setRememberMe', 'true');
-      SharedPreferences.getItem('setRememberMe', function (value) {
-        console.log('checked' + value);
-      });
-    }
+  const [modalVisible, setModalVisible] = useState(false);
+  console.log('authReducers');
+  console.log(authReducers);
+  console.log(authReducers.userData);
+  console.log(authReducers.userData.length);
+  const gotoDashboard = () => {
+    navigation.reset({
+      index: 0,
+      routes: [
+        {
+          name: 'DashboardHome',
+          params: {someParam: 'Param1'},
+        },
+      ],
+    });
   };
 
   return (
     <View style={{padding: 50}}>
-      <TextInput
-        label="ID or Email"
-        value={emailId}
-        mode="outlined"
-        onChangeText={text => setEmail(text)}
-        keyboardType="email-address"
-        placeholder="johndoe@gmail.com"
-        activeOutlineColor="#620A83"
-        // backgroundColor="#803A9B"
-        style={{height: 54, backgroundColor: '#E5E5E5', color: '#000'}}
-      />
-      <TextInput
-        label="Password"
-        value={password}
-        mode="outlined"
-        secureTextEntry={true}
-        onChangeText={text => setPassword(text)}
-        style={{height: 54, backgroundColor: '#E5E5E5', color: '#000'}}
-        right={
-          <TextInput.Icon
-            name={passwordVisible ? 'eye' : 'eye-off'}
-            onPress={() => setPasswordVisible(!passwordVisible)}
-            style={{marginTop: 10}}
-          />
-        }
-      />
+      <View>
+        <CustomMsgAlert
+          modalVisible={modalVisible}
+          setModalVisible={setModalVisible}
+          message={
+            authReducers.userData.length === 0
+              ? 'User is not authorized'
+              : !password.trim() || !emailId.trim()
+              ? 'Enter valid email and password'
+              : 'Invalid Email and password'
+          }
+        />
+        <TextInput
+          label="ID or Email"
+          value={emailId}
+          mode="outlined"
+          onChangeText={text => setEmail(text)}
+          keyboardType="email-address"
+          placeholder="johndoe@gmail.com"
+          activeOutlineColor={validateEmail(emailId) ? '#620A83' : '#EA3A3A'}
+          // backgroundColor="#803A9B"
+          style={{
+            height: 54,
+            backgroundColor: '#E5E5E5',
+            color: false ? 'red' : '#fff',
+          }}
+          returnKeyType="next"
+          onSubmitEditing={() => ref_input2.current.focus()}
+          ref={ref_input2}
+          blurOnSubmit={true}
+          autoCapitalize="none"
+        />
+        {!validateEmail(emailId) ? (
+          <Text style={{color: 'red'}}>Your email is not valid</Text>
+        ) : (
+          <View></View>
+        )}
+      </View>
+
+      <View>
+        <TextInput
+          label="Password"
+          value={password}
+          mode="outlined"
+          secureTextEntry={passwordVisible}
+          onChangeText={text => setPassword(text)}
+          style={{
+            height: 54,
+            backgroundColor: '#E5E5E5',
+            color: validatePassword(password) ? 'red' : '#000',
+          }}
+          activeOutlineColor={validatePassword(emailId) ? '#620A83' : '#EA3A3A'}
+          showSoftInputOnFocus={passwordVisible}
+          autoCapitalize="none"
+          right={
+            <TextInput.Icon
+              name={passwordVisible ? 'eye' : 'eye-off'}
+              onPress={() => {
+                setPasswordVisible(!passwordVisible);
+              }}
+              style={{marginTop: 10}}
+            />
+          }
+          ref={ref_input2}
+        />
+        {!validatePassword(password) ? (
+          <Text style={{color: 'red'}}>Your password is empty</Text>
+        ) : (
+          <View></View>
+        )}
+      </View>
       <View
         style={{
           flexDirection: 'row',
@@ -115,6 +122,14 @@ const BodyContainer = ({navigation}) => {
           <Checkbox
             status={checked ? 'checked' : 'unchecked'}
             onPress={() => {
+              if (!password.trim() || !emailId.trim()) {
+                setModalVisible(true);
+                setIsLoading(false);
+                return;
+              } else if (validatePassword(password) && validateEmail(emailId)) {
+                handleRememberme(checked);
+                setIsLoading(false);
+              } else setModalVisible(true);
               setChecked(!checked);
             }}
             color="#620A83"
@@ -143,9 +158,27 @@ const BodyContainer = ({navigation}) => {
           alignItems: 'center',
           justifyContent: 'center',
         }}
-        onPress={onSubmitFormHandler}>
-        <View>
-          {isLoading ? <ActivityIndicator /> : <View></View>}
+        onPress={() => {
+          console.log('hello reducers');
+          console.log(authReducers.error);
+          setIsLoading([authReducers.loading]);
+          postLogin(emailId, password);
+          setIsLoading(true);
+          console.log(authReducers);
+          if (authReducers.userData.length === 0) {
+            setModalVisible(true);
+            // console.error(authReducers.userData);
+            setIsLoading(false);
+          } else if (!password.trim() || !emailId.trim()) {
+            setModalVisible(true);
+            setIsLoading(false);
+            return;
+          } else if (validatePassword(password) && validateEmail(emailId)) {
+            gotoDashboard();
+            setIsLoading(false);
+          }
+        }}>
+        <View style={{flexDirection: 'row'}}>
           <Text
             style={{
               fontSize: 14,
@@ -155,6 +188,11 @@ const BodyContainer = ({navigation}) => {
             }}>
             LOG IN
           </Text>
+          {isLoading ? (
+            <ActivityIndicator color={'#fff'} style={{marginLeft: 10}} />
+          ) : (
+            <View></View>
+          )}
         </View>
       </TouchableHighlight>
     </View>
