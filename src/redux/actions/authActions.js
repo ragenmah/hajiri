@@ -1,13 +1,10 @@
 import axios from 'axios';
-import {RectButton} from 'react-native-gesture-handler';
 import {API_BASE_URL} from '../../utils/constants';
 import {
   POST_LOGIN_SUCCESS,
   POST_LOGIN_FAIL,
   POST_LOGIN_REQUEST,
 } from '../constants/authConstants';
-
-var SharedPreferences = require('react-native-shared-preferences');
 
 export const postLoginRequest = () => {
   return {type: POST_LOGIN_REQUEST};
@@ -21,6 +18,7 @@ export const postLoginSuccess = userData => {
   return {type: POST_LOGIN_SUCCESS, payload: userData};
 };
 
+var SharedPreferences = require('react-native-shared-preferences');
 export const postLoginUser = (username, password) => {
   const data = {
     username: username,
@@ -43,6 +41,11 @@ export const postLoginUser = (username, password) => {
         console.log(`TOKEN ==== : ${JSON.stringify(res.data['token'])}`);
         console.log(`attendance token ${JSON.stringify(res.data['token'])} `);
         SharedPreferences.setItem('token', res.data['token']);
+        SharedPreferences.getItem('token', function (value) {
+          console.log('TOeken ===');
+          console.log(value);
+          return value;
+        });
         dispatch(postLoginSuccess(loginResponse));
       })
       .catch(error => {

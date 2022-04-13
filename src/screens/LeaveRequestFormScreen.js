@@ -21,7 +21,9 @@ import LeaveStats from '../components/leave/LeaveStats';
 import Icon from 'react-native-vector-icons/AntDesign';
 import {useNavigation} from '@react-navigation/native';
 import axios from 'axios';
-import { API_BASE_URL } from '../utils/constants';
+import {API_BASE_URL} from '../utils/constants';
+import {useDispatch, useSelector} from 'react-redux';
+import {postApplyLeave} from '../redux/actions/leaveActions';
 
 const LeaveRequestFormScreen = () => {
   const navigation = useNavigation();
@@ -40,62 +42,27 @@ const LeaveRequestFormScreen = () => {
   const [ToDateChanged, setToDateChanged] = useState(false);
   const [startDateChanged, setStartDateChanged] = useState(false);
 
-  // const baseUrl = 'https://cold-bobcat-36.loca.lt/api/leave-requests';
   const [isLoading, setIsLoading] = useState(false);
   var SharedPreferences = require('react-native-shared-preferences');
 
   const [userToken, setUserToken] = useState('');
 
-  useEffect(() => {
-    SharedPreferences.getItem('token', function (value) {
-      // console.log(`value token ${value}`);
-      setUserToken(value);
-    });
-  });
+  const dispatch = useDispatch();
+  const {leaveReducers} = useSelector(state => state);
+  const postLeaveRequest = data => dispatch(postApplyLeave(data));
 
   const data = {
-    reason_title: 'reason title',
-    reason_desc: 'reason description',
-    from: '2022-03-03T06:00:00.000Z',
-    till: '2022-03-03T06:00:00.000Z',
+    reason_title: value,
+    reason_desc: leaveReason,
+    from: startDate,
+    till: ToDate,
   };
 
-  const options = {
-    headers: {
-      'Content-Type': 'application/json',
-      accept: 'application/json',
-      
-      // Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJzdXBlcnVzZXJAZXhhbXBsZS5jb20iLCJyb2xlX25hbWUiOiJhZG1pbiIsImlhdCI6MTY0OTUyNDkzNCwiZXhwIjoxNjQ5NTI4NTM0fQ.eddvaThDJdYBk5DtV3BSNwJlDPvFHE3wOzikhRDihgo`,
-      Authorization: `Bearer ${userToken}`,
-    },
-  };
-  const instance = axios.create({
-    baseURL: `${API_BASE_URL}`,
-    timeout: 1000,
-    headers: {Authorization: 'Bearer ' + userToken},
-  });
-  const handleFormRequest = async() => {
-    // if (!items.trim() || !leaveReason.trim()) {
-    //   alert('Enter valid information');
-    //   return;
-    // }
-    // navigation.navigate('DashboardHome', {nav: navigation});
+  const handleFormRequest = async () => {
     setIsLoading(true);
-    try {
-      console.log(`${API_BASE_URL}/leave-requests`)
-    await  axios
-        .post(`${API_BASE_URL}/leave-requests`, data, options)
-        .then(res => {
-          console.log(`RESPONSE ==== : ${JSON.stringify(res.data)}`);
-        })
-        .catch(err => {
-          console.log('1dERROR: ====', err);
-        });
-    } catch (error) {
-      // alert("An error has occurred");
-      console.log('error' + error);
-      setIsLoading(false);
-    }
+    console.log('hell to thre king');
+    postLeaveRequest(data);
+    setIsLoading(false);
   };
   return (
     <SafeAreaView style={styles.scrollContainer}>
@@ -109,7 +76,7 @@ const LeaveRequestFormScreen = () => {
           onPress={() => {
             navigation.navigate('LeaveRequestStack');
             //   console.log()
-          }} 
+          }}
         />
         <Image
           source={require('../../assets/images/hajiri_logo.png')}
@@ -288,6 +255,7 @@ const LeaveRequestFormScreen = () => {
                 width: 190,
               }}
               onPress={() => {
+                console.log('loggged');
                 handleFormRequest();
               }}>
               <Text style={{color: '#fff', letterSpacing: 1.24}}>

@@ -1,5 +1,12 @@
 import React, {useState} from 'react';
-import {SafeAreaView, ScrollView, StyleSheet, View, Image} from 'react-native';
+import {
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  View,
+  Image,
+  StatusBar,
+} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 
 const SplashScreen = () => {
@@ -7,22 +14,26 @@ const SplashScreen = () => {
 
   useState(() => {
     setTimeout(() => {
-      
       // navigation.navigate('LoginScreen');
 
-     navigation.reset({
-            index: 0,
-            routes: [
-              {
-                name: 'LoginScreen',
-                params: { someParam: 'Param1' },
-              },
-            ],
-          })
+      navigation.reset({
+        index: 0,
+        routes: [
+          {
+            name: 'LoginScreen',
+            params: {someParam: 'Param1'},
+          },
+        ],
+      });
     }, 2000);
   }, []);
   return (
     <SafeAreaView style={styles.scrollContainer}>
+      <StatusBar
+        barStyle="light-content"
+        animated={true}
+        backgroundColor="#803A9B"
+      />
       <ScrollView>
         <View
           style={{

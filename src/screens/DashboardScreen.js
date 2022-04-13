@@ -1,11 +1,13 @@
 import axios from 'axios';
 import React, {useEffect, useState} from 'react';
 import {SafeAreaView, ScrollView, StyleSheet} from 'react-native';
+import {useDispatch, useSelector} from 'react-redux';
 import CalendarAttendance from '../components/calendar/CalendarAttendance';
 import AttendanceChart from '../components/charts/AttendanceChart';
 import WorkingHoursChart from '../components/charts/WorkingHoursChart';
 import MarkAttendanceCard from '../components/markAttendance/MarkAttendanceCard';
 import WelcomeCard from '../components/welcome/WelcomeCard';
+import {postUserDetail} from '../redux/actions/userDetailActions';
 import {API_BASE_URL} from '../utils/constants';
 
 const DashboardScreen = () => {
@@ -15,44 +17,19 @@ const DashboardScreen = () => {
   const [userAll, setUserAll] = useState('');
   const [firstName, setFirstName] = useState('');
   const [userId, setUserId] = useState('');
-  
-  useEffect(() => {
-    SharedPreferences.getItem('token', function (value) {
-      setUserToken(value);
-    });
-    try {
-    console.log("hello")
-      axios
-        .get(`${API_BASE_URL}/users/me`, {
-          headers: {
-            accept: 'application/json',
-            Authorization: 'Bearer ' + userToken,
-          },
-        })
-        .then(res => {
-          const data = JSON.stringify(res.data['data']);
-          // setUserAll(res.data);
-          // console.log('hello' + JSON.stringify(res.data['data']));
-          console.log('userid' + res.data['data']['first_name']);
-          setUserId(res.data['data']['id'])
-          setFirstName(res.data['data']['first_name']);
-          SharedPreferences.setItem(
-            'userId',
-            res.data['data']['id'].toString(),
-          );
-        })
-        .catch(err => console.log(err));
-    } catch (error) {
-      console.error(error);
-    }
-  });
 
+  const dispatch = useDispatch();
+  const {userDetailReducers} = useSelector(state => state);
+
+  useEffect(() => {
+    dispatch(postUserDetail);
+  });
 
   return (
     <SafeAreaView style={styles.scrollContainer}>
       <ScrollView>
-        <WelcomeCard firstName={firstName} />
-        <MarkAttendanceCard userId={userId} />
+        {/* <WelcomeCard firstName={firstName} /> */}
+        <MarkAttendanceCard userId={userDetailReducers.postData} />
         <CalendarAttendance token={userToken} userId={userId} />
         <AttendanceChart />
         <WorkingHoursChart />

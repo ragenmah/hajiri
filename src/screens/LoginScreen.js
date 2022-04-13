@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
   scrollContainer: {
     flex: 1,
     justifyContent: 'space-between',
-    backgroundColor: '#E5E5E5',
+    backgroundColor: '#F9F9F9',
     position: 'relative',
   },
 });

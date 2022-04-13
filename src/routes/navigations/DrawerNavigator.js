@@ -12,6 +12,7 @@ import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import BottomTabNavigator from '../navigations/BottomTabNavigator';
 import {routes, screens} from '../RouteItems';
 import {useRoute} from '@react-navigation/native';
+import WelcomeCard from '../../components/welcome/WelcomeCard';
 
 const navigationRef = React.createRef();
 const navigatioin = () => navigationRef.current;
@@ -22,7 +23,7 @@ const CustomDrawerContent = props => {
   const currentRouteName = props.nav()?.getCurrentRoute()?.name;
   return (
     <DrawerContentScrollView {...props} style={{height: 50}}>
-      {routes
+      {/* {routes
         .filter(route => route.showInDrawer)
         .map(route => {
           const focusedRoute = routes.find(r => r.name === currentRouteName);
@@ -34,7 +35,11 @@ const CustomDrawerContent = props => {
               key={route.name}
               label={() => (
                 <View style={styles.drawerItemRow}>
-                 { route.title === 'Log Out'?<SimpleLineIcons name="logout" size={20} color="#292D32"/>:<EvilIcon name="user" size={25} color="#292D32" />}
+                  {route.title === 'Log Out' ? (
+                    <SimpleLineIcons name="logout" size={20} color="#292D32" />
+                  ) : (
+                    <EvilIcon name="user" size={25} color="#292D32" />
+                  )}
                   <Text
                     style={
                       focused ? styles.drawerLabelFocused : styles.drawerLabel
@@ -62,7 +67,8 @@ const CustomDrawerContent = props => {
               ]}
             />
           );
-        })}
+        })} */}
+        
     </DrawerContentScrollView>
   );
 };
@@ -90,24 +96,26 @@ const DrawerNavigator = () => {
           <TouchableOpacity
             onPress={() => navigation.toggleDrawer()}
             style={styles.headerLeft}>
-            <Icon name="menu" size={25} color="#292D32" />
+            {/* <Icon name="menu" size={25} color="#292D32" /> */}
           </TouchableOpacity>
         ),
       })}
       drawerContent={props => (
         <CustomDrawerContent {...props} nav={navigatioin} />
+
       )}>
       <Drawer.Screen
         name={screens.Home}
         component={BottomTabNavigator}
         options={{
+          // drawerItemStyle: {height: 0},
           title: 'Home',
-          // headerTitle:551E18 () => <Image source={require('../assets/hotel_logo.jpg')} />,
-
+          // headerTitle: () => <WelcomeCard firstName={'Ragen'} />,
           headerTitle: '',
           headerRight: () => (
             <View style={styles.headerRight}>
-              <Icon name="notifications-outline" size={20} color="#292D32" />
+              {/* <Icon name="notifications-outline" size={20} color="#292D32" /> */}
+              <WelcomeCard firstName={'Ragen'} />
               <View style={styles.roundCard}>
                 <Text style={styles.graphValue}>92%</Text>
               </View>
@@ -131,19 +139,19 @@ const styles = StyleSheet.create({
   headerRight: {
     marginRight: 15,
     flexDirection: 'row',
-    justifyContent: 'space-around',
+    justifyContent: 'space-between',
     alignItems: 'center',
   },
   // drawer content
   drawerLabel: {
     fontSize: 14,
- marginLeft:10
+    marginLeft: 10,
   },
   drawerLabelFocused: {
     fontSize: 14,
     color: '#551E18',
     fontWeight: '500',
-    marginLeft:10
+    marginLeft: 10,
   },
   drawerItem: {
     height: 50,
@@ -162,7 +170,7 @@ const styles = StyleSheet.create({
     width: 36,
     height: 36,
     backgroundColor: '#F4E0FB',
-    marginLeft: 8,
+    marginLeft: 50,
     justifyContent: 'center',
     alignItems: 'center',
   },

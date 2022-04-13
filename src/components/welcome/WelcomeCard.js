@@ -1,17 +1,19 @@
 import React from 'react';
 import {Text} from 'react-native';
 
-const   WelcomeCard = ({firstName}) => {
+const WelcomeCard = ({firstName}) => {
   return (
     <Text
       style={{
         alignSelf: 'center',
-        fontSize: 24,
+        fontSize: 25,
         fontWeight: 'bold',
-        padding: 15,
+        // padding: 15,
+        justifyContent: 'center',
+        alignItems: 'center',
         textTransform: 'uppercase',
-      }}>     
-      WelCome Back, {firstName}
+      }}>
+      WelCome, {firstName}!
     </Text>
   );
 };

@@ -5,6 +5,7 @@ import {
   View,
   ToastAndroid,
   TouchableHighlight,
+  Image,
 } from 'react-native';
 import moment from 'moment';
 import ShowTimeCard from './ShowTimeCard';
@@ -25,12 +26,13 @@ const MarkAttendanceCard = ({userId}) => {
   const [secondsLeft, setSecondsLeft] = useState(1);
   const [timerOn, setTimerOn] = useState(false);
   const [checkin, setCheckin] = useState(moment().format('h:mm a'));
-  const [checkout, setCheckOut] = useState('0:00 pm');
+  const [checkout, setCheckOut] = useState('-');
   const [checkinTime, setCheckinTime] = useState('');
   const [checkoutTime, setCheckOutTime] = useState('');
 
   const [workTime, setWorkTime] = useState('0h 0m');
   const [isLoading, setIsLoading] = useState(false);
+  const [dt, setDt] = useState(new Date().toLocaleString());
 
   const startTimer = () => {
     BackgroundTimer.runBackgroundTimer(() => {
@@ -40,6 +42,7 @@ const MarkAttendanceCard = ({userId}) => {
       });
     }, 1000);
   };
+
   // Runs when timerOn value changes to start or stop timer
   useEffect(() => {
     if (timerOn) startTimer();
@@ -48,6 +51,14 @@ const MarkAttendanceCard = ({userId}) => {
       BackgroundTimer.stopBackgroundTimer();
     };
   }, [timerOn]);
+
+  useEffect(() => {
+    let secTimer = setInterval(() => {
+      setDt(new Date().toLocaleString());
+    }, 1000);
+
+    return () => clearInterval(secTimer);
+  }, [isTimerStart]);
 
   useEffect(() => {
     if (secondsLeft === 0) BackgroundTimer.stopBackgroundTimer();
@@ -79,6 +90,7 @@ const MarkAttendanceCard = ({userId}) => {
       50,
     );
   };
+
   const breakTime =
     clockify().displayHours + 'h ' + clockify().displayMins + `m`;
   +clockify().displaySecs + `s`;
@@ -104,7 +116,7 @@ const MarkAttendanceCard = ({userId}) => {
     var m = Math.floor((d % 3600) / 60);
     var s = Math.floor((d % 3600) % 60);
 
-    var hDisplay = h > 0 ? h + (h == 1 ? 'h' :'h') : '';
+    var hDisplay = h > 0 ? h + (h == 1 ? 'h' : 'h') : '';
     var mDisplay = m > 0 ? m + (m == 1 ? 'm' : 'm') : '';
     var sDisplay = s > 0 ? s + (s == 1 ? 's' : 's') : '';
     // return hDisplay + mDisplay + sDisplay;
@@ -266,11 +278,10 @@ const MarkAttendanceCard = ({userId}) => {
             </Text>
             <Text style={styles.dayTextStyle}>{moment().format('dddd')}</Text>
           </View>
-          {/* <Text> Calender logo</Text> */}
-          <MatIcon
-            name="calendar-account"
-            size={50}
-            color="#803A9B"
+
+          <Image
+            source={require('../../../assets/images/icons/calendar.png')}
+            resizeMode={'cover'}
             style={{marginRight: 20}}
           />
         </View>
@@ -278,7 +289,8 @@ const MarkAttendanceCard = ({userId}) => {
       <View style={styles.displayFlex}>
         <ShowTimeCard
           // time=  {timeup}
-          time={checkin}
+          // time={checkin}
+          time={moment(dt).format('h:mm:s a')}
           timeText={'Checkin time'}
           icon={'login'}
         />
@@ -310,7 +322,8 @@ const MarkAttendanceCard = ({userId}) => {
           showCheckInIndicator={isLoading}
           toggleCheckIn={() => {
             if (!isTimerStart) {
-              saveCheckInTime();
+              // saveCheckInTime();
+              setIsTimerStart(!isTimerStart);
             } else {
               saveCheckOutTime();
             }
