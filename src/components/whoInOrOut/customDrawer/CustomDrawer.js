@@ -109,7 +109,7 @@ const styles = StyleSheet.create({
   androidBackdrop: {
     backgroundColor: '#232f34',
     opacity: 0.32,
-    width:200,
+    width: 200,
     height: '82%',
     width: '100%',
     left: '35%',

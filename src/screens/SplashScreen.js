@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -11,22 +11,46 @@ import {useNavigation} from '@react-navigation/native';
 
 const SplashScreen = () => {
   const navigation = useNavigation();
+  const [rememberMe, setRememberMes] = useState('');
+  const [token, setToken] = useState('');
+  var SharedPreferences = require('react-native-shared-preferences');
 
-  useState(() => {
+  useEffect(() => {
     setTimeout(() => {
-      // navigation.navigate('LoginScreen');
-
-      navigation.reset({
-        index: 0,
-        routes: [
-          {
-            name: 'LoginScreen',
-            params: {someParam: 'Param1'},
-          },
-        ],
-      });
+      console.log('inside timeout');
+      console.log(rememberMe);
+      // if (rememberMe != null && token != null && 1 != 1) {
+      //   console.log('dashboard');
+      // } else {
+      //   console.log('loggin');
+      // }
     }, 2000);
+    SharedPreferences.getItems(['setRememberMe', 'token'], function (value) {
+      console.log('remember me ' + value);
+      console.log(value[0]);
+      setRememberMes(value[0]);
+      setToken(value[1]);
+
+      value[0] != 'null' && value[1] != 'null' ? gotoDashboard() : gotoLogin();
+    });
   }, []);
+  const gotoDashboard = () => {
+    navigation.reset({
+      index: 0,
+      routes: [{name: 'DashboardHome', params: {token: token}}],
+    });
+  };
+  const gotoLogin = () => {
+    navigation.reset({
+      index: 0,
+      routes: [
+        {
+          name: 'LoginScreen',
+          params: {someParam: 'Param1'},
+        },
+      ],
+    });
+  };
   return (
     <SafeAreaView style={styles.scrollContainer}>
       <StatusBar

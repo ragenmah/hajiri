@@ -3,13 +3,27 @@ import PersonalEdit from '../components/profile/PersonalEdit';
 import PasswordEdit from '../components/profile/PasswordEdit';
 import {SafeAreaView, Text, StyleSheet, ScrollView, View} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
+import CustomAppBar from '../components/customAppBar/CustomAppBar';
+import ProfileCustomDropdown from '../components/dropdown/ProfileCustomDropdown';
 
 const ProfileScreen = () => {
-  const [changePage, setChangePage] = useState(true);
+  const [changePage, setChangePage] = useState(false);
+  const [showDropdown, setShowDropdown] = React.useState(false);
 
+  const sendDataToParent = data => {
+    setShowDropdown(data);
+  };
   return (
     <SafeAreaView style={styles.scrollContainer}>
+      <CustomAppBar
+        sendDataToParent={sendDataToParent}
+        showDropdown={showDropdown}
+        showWelcome={'false'}
+      />
+
       <ScrollView>
+        <ProfileCustomDropdown showdrawer={showDropdown} />
+
         <View style={styles.tabContainer}>
           <View style={styles.tabLabelContainer}>
             <TouchableOpacity
@@ -17,7 +31,7 @@ const ProfileScreen = () => {
                 setChangePage(false);
               }}>
               <Text
-                style={{color: '#1F1F1F',fontWeight:'bold'}}
+                style={{color: '#1F1F1F', fontWeight: 'bold'}}
                 onPress={() => {
                   setChangePage(false);
                 }}>
@@ -26,7 +40,6 @@ const ProfileScreen = () => {
               {changePage ? (
                 <View></View>
               ) : (
-                
                 <View style={styles.horizontalLine}></View>
               )}
             </TouchableOpacity>
@@ -36,7 +49,9 @@ const ProfileScreen = () => {
               onPress={() => {
                 setChangePage(true);
               }}>
-              <Text style={{color: '#1F1F1F',fontWeight:'bold'}}>Password</Text>
+              <Text style={{color: '#1F1F1F', fontWeight: 'bold'}}>
+                Password
+              </Text>
               {!changePage ? (
                 <View></View>
               ) : (
@@ -46,7 +61,7 @@ const ProfileScreen = () => {
           </View>
         </View>
         <View style={{paddingLeft: 24, paddingRight: 24}}>
-          {!changePage ?<PersonalEdit /> :  <PasswordEdit /> }
+          {!changePage ? <PersonalEdit /> : <PasswordEdit />}
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -65,6 +80,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     marginLeft: 45,
     marginBottom: 20,
+    marginTop: 10,
   },
   horizontalLine: {
     width: '100%',

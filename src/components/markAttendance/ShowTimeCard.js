@@ -13,7 +13,11 @@ const ShowTimeCard = ({time, timeText, icon}) => {
       </View>
 
       <View style={styles.roundCard}>
-       {icon==="login"?<AntDesign name={`${icon}`} size={15} color="#803A9B" />: <Fontisto name={`${icon}`} size={15} color="#803A9B" />}
+        {icon === 'login' ? (
+          <AntDesign name={`${icon}`} size={15} color="#803A9B" />
+        ) : (
+          <Fontisto name={`${icon}`} size={15} color="#803A9B" />
+        )}
       </View>
     </View>
   );
@@ -30,6 +34,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     width: '45%',
+    borderRadius: 16,
+    elevation: 5,
   },
   timeTextStyle: {
     fontSize: 20,
@@ -49,5 +55,6 @@ const styles = StyleSheet.create({
     fontSize: 12,
     letterSpacing: 0.18,
     color: '#8A8A8A',
+    paddingTop: 10,
   },
 });

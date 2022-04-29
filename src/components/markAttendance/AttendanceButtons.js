@@ -12,7 +12,7 @@ const AttendanceButtons = ({
   toggleCheckIn,
   takeBreak,
   showCheckInIndicator,
-  breakText
+  breakText,
 }) => {
   return (
     <View style={styles.mainContainer}>
@@ -38,16 +38,16 @@ export default AttendanceButtons;
 const styles = StyleSheet.create({
   mainContainer: {
     marginTop: 20,
-    flexDirection: 'row',
+    flexDirection: 'column',
     justifyContent: 'space-around',
     alignItems: 'center',
   },
   roundButton: {
-    width: 116,
-    height: 30,
+    width: '90%',
+    height: 40,
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 15,
+    borderRadius: 5,
     backgroundColor: '#803A9B',
     position: 'relative',
   },
@@ -55,6 +55,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
     borderWidth: 1,
     borderColor: '#803A9B',
+    marginTop: 10,
   },
   btnTextStyle: {
     fontSize: 12,

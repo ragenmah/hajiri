@@ -17,6 +17,8 @@ import {
 import DatePicker from 'react-native-date-picker';
 import DropDownPicker from 'react-native-dropdown-picker';
 import moment from 'moment';
+import DateRangePicker from 'react-native-daterange-picker';
+
 import LeaveStats from '../components/leave/LeaveStats';
 import Icon from 'react-native-vector-icons/AntDesign';
 import {useNavigation} from '@react-navigation/native';
@@ -24,6 +26,7 @@ import axios from 'axios';
 import {API_BASE_URL} from '../utils/constants';
 import {useDispatch, useSelector} from 'react-redux';
 import {postApplyLeave} from '../redux/actions/leaveActions';
+import CustomMsgAlert from '../utils/CustomMsgAlert';
 
 const LeaveRequestFormScreen = () => {
   const navigation = useNavigation();
@@ -34,7 +37,7 @@ const LeaveRequestFormScreen = () => {
   ]);
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(null);
-  const [leaveReason, setLeaveReason] = useState(null);
+  const [leaveReason, setLeaveReason] = useState('');
   const [startDate, setStartDate] = useState(new Date());
   const [openDate, setOpenDate] = useState(false);
   const [ToDate, setToDate] = useState(new Date());
@@ -49,25 +52,48 @@ const LeaveRequestFormScreen = () => {
 
   const dispatch = useDispatch();
   const {leaveReducers} = useSelector(state => state);
-  const postLeaveRequest = data => dispatch(postApplyLeave(data));
+  const postLeaveRequest = data => dispatch(postApplyLeave(data, userToken));
 
+  const [datePickerDate, setDatePickerDate] = useState({
+    startDateM: null,
+    endDateM: null,
+    displayedDateM: moment(),
+    minDateM: moment(),
+    // maxDate: moment().set("date", 20),
+  });
+  const {startDateM, endDateM, displayedDateM, minDateM} = datePickerDate;
   const data = {
     reason_title: value,
     reason_desc: leaveReason,
     from: startDate,
     till: ToDate,
   };
-
+  useEffect(() => {
+    SharedPreferences.getItem('token', function (value) {
+      setUserToken(value);
+    });
+  });
   const handleFormRequest = async () => {
     setIsLoading(true);
     console.log('hell to thre king');
-    postLeaveRequest(data);
+    postLeaveRequest(data, userToken);
     setIsLoading(false);
+    if (leaveReducers?.postData?.msg != '') {
+      setModalVisible(true);
+    }
   };
+  const [modalVisible, setModalVisible] = useState(false);
+
   return (
     <SafeAreaView style={styles.scrollContainer}>
+      <CustomMsgAlert
+        modalVisible={modalVisible}
+        setModalVisible={setModalVisible}
+        message={'Request Sent!'}
+      />
       <ScrollView>
         <LeaveStats />
+
         <Icon
           name="doubleleft"
           size={25}
@@ -83,12 +109,17 @@ const LeaveRequestFormScreen = () => {
           resizeMode={'cover'}
           style={{width: 75, height: 90, alignSelf: 'center'}}
         />
+        <Image
+          source={require('../../assets/images/HAJIRI.png')}
+          resizeMode={'cover'}
+          style={{marginTop: 7, alignSelf: 'center'}}
+        />
         <Text
           style={{
             fontSize: 24,
             paddingLeft: 36,
             marginBottom: 30,
-            marginTop: 10,
+            marginTop: 20,
             fontWeight: 'bold',
             color: '#1F1F1F',
           }}>
@@ -132,7 +163,7 @@ const LeaveRequestFormScreen = () => {
             <TextInput
               multiline={true}
               numberOfLines={8}
-              onChangeText={text => setLeaveReason({text})}
+              onChangeText={text => setLeaveReason(text)}
               value={leaveReason}
               style={{
                 borderColor: '#620A83',
@@ -220,6 +251,23 @@ const LeaveRequestFormScreen = () => {
                 setOpenTODate(false);
               }}
             />
+            <DateRangePicker
+              onChange={() => {
+                setDatePickerDate;
+                console.log(startDateM);
+              }}
+              startDate={startDateM}
+              endDate={endDateM}
+              // minDate={minDateM}
+              // maxDate={maxDate}
+              range
+              displayedDate={displayedDateM}>
+              <Image
+                source={require('../../assets/images/icons/calendar.png')}
+                resizeMode={'cover'}
+                style={{marginRight: 20}}
+              />
+            </DateRangePicker>
           </View>
           <View style={{marginTop: 10}}>
             <Text style={{fontSize: 16}}>Supervisor</Text>
@@ -268,7 +316,14 @@ const LeaveRequestFormScreen = () => {
                 alignItems: 'center',
                 justifyContent: 'center',
               }}>
-              <Text style={{letterSpacing: 1.25}}>CANCEL</Text>
+              <Text
+                style={{letterSpacing: 1.25}}
+                onPress={() => {
+                  navigation.navigate('LeaveRequestStack');
+                  //   console.log()
+                }}>
+                CANCEL
+              </Text>
             </View>
           </View>
         </View>

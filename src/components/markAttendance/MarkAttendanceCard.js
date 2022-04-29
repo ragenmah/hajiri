@@ -14,25 +14,29 @@ import BackgroundTimer from 'react-native-background-timer';
 import {API_BASE_URL} from '../../utils/constants';
 import getToken from '../../utils/getToken';
 import axios, {Axios} from 'axios';
-import MatIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import CustomDrawer from '../whoInOrOut/customDrawer/CustomDrawer';
 import {TouchableOpacity} from 'react-native-gesture-handler';
+import {useNavigation} from '@react-navigation/native';
+import CustomAlert from '../../utils/CustomAlert';
+import {useDispatch, useSelector} from 'react-redux';
+import {postUserDetail} from '../../redux/actions/userDetailActions';
 
 const MarkAttendanceCard = ({userId}) => {
   const [isTimerStart, setIsTimerStart] = useState(false);
+  const navigation = useNavigation();
 
   const [totalDuration, setTotalDuration] = useState(0);
 
   const [secondsLeft, setSecondsLeft] = useState(1);
   const [timerOn, setTimerOn] = useState(false);
-  const [checkin, setCheckin] = useState(moment().format('h:mm a'));
+  const [checkin, setCheckin] = useState('-');
   const [checkout, setCheckOut] = useState('-');
   const [checkinTime, setCheckinTime] = useState('');
   const [checkoutTime, setCheckOutTime] = useState('');
 
-  const [workTime, setWorkTime] = useState('0h 0m');
+  const [workTime, setWorkTime] = useState('-');
   const [isLoading, setIsLoading] = useState(false);
-  const [dt, setDt] = useState(new Date().toLocaleString());
+  // const [dt, setDt] = useState(new Date().toLocaleString());
 
   const startTimer = () => {
     BackgroundTimer.runBackgroundTimer(() => {
@@ -53,18 +57,19 @@ const MarkAttendanceCard = ({userId}) => {
   }, [timerOn]);
 
   useEffect(() => {
-    let secTimer = setInterval(() => {
-      setDt(new Date().toLocaleString());
-    }, 1000);
-
-    return () => clearInterval(secTimer);
+    // let secTimer = setInterval(() => {
+    //   setDt(new Date().toLocaleString());
+    // }, 1000);
+    // return () => clearInterval(secTimer);
   }, [isTimerStart]);
 
   useEffect(() => {
     if (secondsLeft === 0) BackgroundTimer.stopBackgroundTimer();
   }, [secondsLeft]);
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    fetchTodaysAttendance();
+  }, []);
   const clockify = () => {
     let hours = Math.floor(secondsLeft / 60 / 60);
     let mins = Math.floor((secondsLeft / 60) % 60);
@@ -124,11 +129,24 @@ const MarkAttendanceCard = ({userId}) => {
   };
   var SharedPreferences = require('react-native-shared-preferences');
   const [userToken, setUserToken] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+
+  const {userDetailReducers} = useSelector(state => state);
+  const dispatch = useDispatch();
   useEffect(() => {
     SharedPreferences.getItem('token', function (value) {
       // console.log(`value token ${value}`);
       setUserToken(value);
     });
+
+    SharedPreferences.getItems(
+      ['firstName', 'lastName', 'userId'],
+      function (values) {
+        setFirstName(values[0]);
+        setLastName(values[1]);
+      },
+    );
   });
   const instance = axios.create({
     baseURL: `${API_BASE_URL}`,
@@ -144,7 +162,7 @@ const MarkAttendanceCard = ({userId}) => {
     setCheckin(currentTime);
     setCheckinTime(currentDateTime);
     setIsTimerStart(!isTimerStart);
-    showToastMessage(checkin);
+    // showToastMessage(checkin);
     instance
       .post('/attendances/check-in', {
         headers: {
@@ -155,6 +173,7 @@ const MarkAttendanceCard = ({userId}) => {
         // console.log(res);
       })
       .catch(err => console.log(err));
+    fetchTodaysAttendance();
     setIsLoading(false);
   };
 
@@ -167,7 +186,7 @@ const MarkAttendanceCard = ({userId}) => {
     setCheckOutTime(currentDateTime);
     setIsTimerStart(!isTimerStart);
     calculateWorkTime(checkinTime, checkoutTime);
-    showToastMessage(checkout);
+    // showToastMessage(checkout);
     instance
       .post('/attendances/check-out', {
         headers: {
@@ -178,6 +197,50 @@ const MarkAttendanceCard = ({userId}) => {
         // console.log(res);
       })
       .catch(err => console.log(err));
+    fetchTodaysAttendance();
+    setIsLoading(false);
+  };
+
+  const saveBreak = () => {
+    setIsLoading(true);
+    console.log('Take a break');
+    console.log(`Bearer ${userToken.toString()}`);
+
+    instance
+      .post('/break-records/break-start', {
+        headers: {
+          Authorization: `Bearer ${userToken}`,
+        },
+      })
+      .then(res => {
+        console.log('break taken');
+        console.log(res);
+      })
+      .catch(err => console.log(err));
+    fetchTodaysAttendance();
+    setIsLoading(false);
+  };
+
+  const saveEndBreak = () => {
+    setIsLoading(true);
+    console.log(`break Bearer ${userToken.toString()}`);
+
+    instance
+      .post('/break-records/break-end', {
+        headers: {
+          Authorization: `Bearer ${userToken}`,
+        },
+      })
+      .then(res => {
+        // console.log(res);
+      })
+      .catch(err => console.log(err));
+    setIsLoading(false);
+  };
+  const [modalVisible, setModalVisible] = useState(false);
+  const [confirmation, setConfirmation] = useState(false);
+  const fetchTodaysAttendance = () => {
+    setIsLoading(true);
     axios
       .get(
         `${API_BASE_URL}/attendances`,
@@ -202,6 +265,10 @@ const MarkAttendanceCard = ({userId}) => {
         res.data['data'].forEach(element => {
           console.log(element.total_time);
           convertTohhmms(element.total_time);
+          // setCheckin(`${element.check_in}`);
+          setCheckOut(moment(`${element.check_out}`).format('h:mm a'));
+          setCheckin(moment(`${element.check_in}`).format('h:mm a'));
+          // setCheckOut(moment(element.check_out.toString()).format('h:mm a'));
           //  moment(element.total_time).format('YYYY-MM-DD')
         });
         console.log(res.data['data'][0]);
@@ -210,56 +277,49 @@ const MarkAttendanceCard = ({userId}) => {
     setIsLoading(false);
   };
 
-  const saveBreak = () => {
-    setIsLoading(true);
-    console.log(`Bearer ${userToken.toString()}`);
-
-    instance
-      .post('/break-records/break-start', {
-        headers: {
-          Authorization: `Bearer ${userToken}`,
-        },
-      })
-      .then(res => {
-        // console.log(res);
-      })
-      .catch(err => console.log(err));
-    setIsLoading(false);
-  };
-
-  const saveEndBreak = () => {
-    setIsLoading(true);
-    console.log(`break Bearer ${userToken.toString()}`);
-
-    instance
-      .post('/break-records/break-end', {
-        headers: {
-          Authorization: `Bearer ${userToken}`,
-        },
-      })
-      .then(res => {
-        // console.log(res);
-      })
-      .catch(err => console.log(err));
-    setIsLoading(false);
-  };
-  const [modalVisible, setModalVisible] = useState(false);
-
   return (
-    <View style={styles.cardContainer}>
-      <CustomDrawer
+    <View style={{marginBottom: 10}}>
+      <CustomAlert
         modalVisible={modalVisible}
         setModalVisible={setModalVisible}
+        message="System wants your confirmation?"
+        confirmation={confirmation}
+        setConfirmation={setConfirmation}
       />
+      <TouchableOpacity
+        style={{marginTop: '3%', marginBottom: 5, left: '65%'}}
+        onPress={() =>
+          // setModalVisible(true)}
+          navigation.toggleDrawer()
+        }>
+        <Text
+          style={{
+            color: '#803A9B',
+            letterSpacing: 1.24,
+            textTransform: 'uppercase',
+          }}>
+          who’s in/out?
+        </Text>
+      </TouchableOpacity>
+      <View style={styles.cardContainer}>
+        {/* <CustomDrawer
+        modalVisible={modalVisible}
+        setModalVisible={setModalVisible}
+      /> */}
 
-      <View
+        {/* <View
         style={{
           flexDirection: 'row',
           justifyContent: 'space-between',
           alignItems: 'center',
         }}>
         <Text style={styles.headerText}>Mark Attendance</Text>
-        <TouchableOpacity style={{}} onPress={() => setModalVisible(true)}>
+        <TouchableOpacity
+          style={{}}
+          onPress={() =>
+            // setModalVisible(true)}
+            navigation.toggleDrawer()
+          }>
           <Text
             style={{
               color: '#803A9B',
@@ -269,75 +329,83 @@ const MarkAttendanceCard = ({userId}) => {
             who’s in/out?
           </Text>
         </TouchableOpacity>
-      </View>
-      <View style={styles.currentDateCard}>
-        <View style={styles.displayFlex}>
-          <View style={styles.dateStyle}>
-            <Text style={styles.dateTextStyle}>
-              {moment().format('Do MMMM, YYYY')}
-            </Text>
-            <Text style={styles.dayTextStyle}>{moment().format('dddd')}</Text>
-          </View>
+      </View> */}
+        <View style={styles.currentDateCard}>
+          <View style={styles.displayFlex}>
+            <View style={styles.dateStyle}>
+              <Text style={styles.dateTextStyle}>
+                {moment().format('Do MMMM, YYYY')}
+              </Text>
+              <Text style={styles.dayTextStyle}>{moment().format('dddd')}</Text>
+            </View>
 
-          <Image
+            {/* <Image
             source={require('../../../assets/images/icons/calendar.png')}
             resizeMode={'cover'}
             style={{marginRight: 20}}
-          />
+          /> */}
+          </View>
+        </View>
+        <View style={{marginBottom: 20}}>
+          <Text style={{paddingTop: 10, textTransform: 'capitalize'}}>
+            {firstName} {lastName}
+          </Text>
+          <Text style={{paddingTop: 10}}>ID: {userId}</Text>
         </View>
       </View>
-      <View style={styles.displayFlex}>
-        <ShowTimeCard
-          // time=  {timeup}
-          // time={checkin}
-          time={moment(dt).format('h:mm:s a')}
-          timeText={'Checkin time'}
-          icon={'login'}
-        />
-        <ShowTimeCard
-          time={`${
-            clockify().displayHours != 0 ? clockify().displayHours + 'h' : ''
-          }${clockify().displayMins}m${clockify().displaySecs}s`}
-          timeText={'Break time'}
-          icon={'stopwatch'}
-        />
-      </View>
-
-      <View style={[styles.displayFlex, styles.marginTimeTop]}>
-        <ShowTimeCard
-          time={workTime}
-          timeText={'Work time'}
-          icon={'stopwatch'}
-        />
-        <ShowTimeCard
-          time={checkout}
-          timeText={'Checkout time'}
-          icon={'login'}
-        />
-      </View>
-
       <View style={styles.paddinfBtnBottom}>
         <AttendanceButtons
           checkinText={!isTimerStart ? 'check in' : 'check out'}
           showCheckInIndicator={isLoading}
           toggleCheckIn={() => {
-            if (!isTimerStart) {
-              // saveCheckInTime();
-              setIsTimerStart(!isTimerStart);
-            } else {
-              saveCheckOutTime();
+            setModalVisible(true);
+            if (confirmation) {
+              isTimerStart ? saveCheckInTime() : saveCheckOutTime();
             }
           }}
           breakText={!timerOn ? 'Take a Break' : 'Leave a Break'}
           takeBreak={() => {
             setTimerOn(timerOn => !timerOn);
+            // setModalVisible(true);
             if (timerOn) {
               saveBreak();
             } else {
               saveEndBreak();
             }
+            if (confirmation) {
+            }
           }}
         />
+      </View>
+      <View style={{paddingLeft: 23, paddingRight: 23}}>
+        <View style={styles.displayFlex}>
+          <ShowTimeCard
+            // time=  {timeup}
+            time={checkin}
+            // time={moment().format('h:mm:s a')}
+            timeText={'Checkin time'}
+            icon={'login'}
+          />
+          <ShowTimeCard
+            time={checkout}
+            timeText={'Checkout time'}
+            icon={'login'}
+          />
+        </View>
+
+        <View style={[styles.displayFlex, styles.marginTimeTop]}>
+          <ShowTimeCard
+            time={workTime}
+            timeText={'Work hours'}
+            icon={'stopwatch'}
+          />
+
+          <ShowTimeCard
+            time={breakTime != '00h 00m' ? breakTime : '-'}
+            timeText={'Break time'}
+            icon={'stopwatch'}
+          />
+        </View>
       </View>
     </View>
   );
@@ -362,14 +430,15 @@ const options = {
 const styles = StyleSheet.create({
   cardContainer: {
     backgroundColor: '#fff',
-    borderRadius: 20,
+    borderRadius: 10,
     marginTop: 10,
-    paddingLeft: 24,
+    paddingLeft: 20,
     paddingTop: 16,
     paddingRight: 24,
     marginHorizontal: 16,
     fontFamily: 'Inter',
     elevation: 10,
+    position: 'relative',
     // height: 358,
   },
   textStyle: {
@@ -384,11 +453,11 @@ const styles = StyleSheet.create({
     paddingTop: 16,
     paddingBottom: 16,
     paddingLeft: 24,
-    marginTop: 10,
+    marginTop: 5,
   },
   displayFlex: {flexDirection: 'row', justifyContent: 'space-between'},
   marginTimeTop: {marginTop: 10},
-  paddinfBtnBottom: {paddingBottom: 38},
+  // paddinfBtnBottom: {paddingBottom: 38},
   headerText: {
     color: '#1F1F1F',
     // left: 24,
@@ -406,5 +475,6 @@ const styles = StyleSheet.create({
   dayTextStyle: {
     letterSpacing: 1.5,
     textTransform: 'uppercase',
+    fontSize: 12,
   },
 });

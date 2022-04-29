@@ -6,36 +6,55 @@ import {
 } from 'react-native-gesture-handler';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import BottomsheetMessage from './BottomsheetMessage';
+import moment from 'moment';
+import Icon from 'react-native-vector-icons/AntDesign';
 
 const LeaveCard = ({fromDate, toDate}) => {
   const refRBSheet = useRef();
   return (
     <View>
-      <TouchableWithoutFeedback
-        onPress={() => {
-          refRBSheet.current.open();
-        }}>
-        <View style={styles.cardContainer}>
+      <View style={styles.cardContainer}>
+        <View>
           <View>
             <View>
-              <View>
-                <Text style={styles.fromText}>From</Text>
-                <Text style={{fontWeight: 'bold'}}>{fromDate}</Text>
-              </View>
-              <View>
-                <Text style={styles.fromText}>To</Text>
-                <Text style={{fontWeight: 'bold'}}>{toDate}</Text>
-              </View>
+              <Text style={styles.fromText}>From</Text>
+              <Text style={{fontWeight: 'bold'}}>
+                {moment(fromDate).format('Do MMMM, YYYY')}
+              </Text>
             </View>
-          </View>
-          <View style={{justifyContent: 'space-evenly'}}>
-            <View style={[styles.roundCard, {backgroundColor: '#43C741'}]}>
-              <Text>s</Text>
+            <View>
+              <Text style={styles.fromText}>To</Text>
+              <Text style={{fontWeight: 'bold'}}>
+                {moment(toDate).format('Do MMMM, YYYY')}
+              </Text>
             </View>
-            <Text style={{color: '#803A9B', fontWeight: 'bold'}}>5 Days</Text>
           </View>
         </View>
-      </TouchableWithoutFeedback>
+        <View style={{justifyContent: 'space-evenly'}}>
+          <View style={[styles.roundCard, {backgroundColor: '#43C741'}]}>
+            <Text>s</Text>
+          </View>
+          <Text style={{color: '#803A9B', fontWeight: 'bold'}}>
+            {moment(fromDate).diff(moment(toDate), 'days')} Days
+          </Text>
+          <TouchableWithoutFeedback
+            onPress={() => {
+              refRBSheet.current.open();
+            }}>
+            <View
+              style={{
+                borderWidth: 1,
+                borderRadius: 5,
+                width: 20,
+                alignItems: 'center',
+                left: 20,
+              }}>
+              <Icon name="up" size={15} color="#757575" />
+            </View>
+          </TouchableWithoutFeedback>
+        </View>
+      </View>
+
       <RBSheet
         ref={refRBSheet}
         closeOnDragDown={true}

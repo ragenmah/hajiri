@@ -1,26 +1,44 @@
+import moment from 'moment';
 import React from 'react';
 import {Text, View, FlatList, StyleSheet} from 'react-native';
 
-const TimeSheetsCard = () => {
+const TimeSheetsCard = props => {
+  var seconds = props.workingHours;
+  seconds = parseInt(seconds);
+  var format =
+    Math.floor(moment.duration(seconds, 'seconds').asHours()) +
+    'h :' +
+    moment.duration(seconds, 'seconds').minutes() +
+    'm :' +
+    moment.duration(seconds, 'seconds').seconds();
+  +'s';
   return (
     <View style={styles.cardContainer}>
       <Text style={{color: '#757575'}}>1</Text>
-      <View style={{marginLeft: 20,}}>
-        <Text style={styles.headerText}>3rd Feb 2022</Text>
+      <View style={{marginLeft: 20}}>
+        <Text style={styles.headerText}>
+          {moment(props.date).format('Do MMMM, YYYY')}
+        </Text>
         <View style={styles.timeRow}>
           <View>
             <Text style={styles.chekinTime}>Check-in</Text>
-            <Text style={styles.checkinSubTime}>5:30 pm</Text>
+            <Text style={styles.checkinSubTime}>
+              {moment(props.checkInTime).format('h:mm:s a')}
+            </Text>
           </View>
           <View>
-            <Text style={[styles.chekinTime,{paddingLeft:10}]}>Check-out</Text>
-            <Text style={styles.checkinSubTime}>5:30 pm</Text>
+            <Text style={[styles.chekinTime, {paddingLeft: 10}]}>
+              Check-out
+            </Text>
+            <Text style={styles.checkinSubTime}>
+              {moment(props.checkOutTime).format('h:mm:s a')}
+            </Text>
           </View>
         </View>
         <View style={styles.timeRow}>
           <View>
             <Text style={styles.chekinTime}>Work Hours</Text>
-            <Text style={styles.checkinSubTime}>5:30 pm</Text>
+            <Text style={styles.checkinSubTime}>{format}</Text>
           </View>
           <View>
             <Text style={styles.chekinTime}>Break Time</Text>
@@ -46,9 +64,9 @@ const styles = StyleSheet.create({
     fontFamily: 'Inter',
     elevation: 5,
     flexDirection: 'row',
-    paddingBottom:20,
+    paddingBottom: 20,
     // height: 358,
-    marginBottom:10
+    marginBottom: 10,
   },
 
   headerText: {

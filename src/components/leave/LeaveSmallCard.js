@@ -1,10 +1,12 @@
 import React from 'react';
 import {Text, View, StyleSheet} from 'react-native';
-const LeaveSmallCard = ({title, days,colorSelected}) => {
+const LeaveSmallCard = ({title, days, colorSelected}) => {
   return (
     <View style={styles.cardContainer}>
-      <Text style={{paddingRight:5,fontSize:12,fontWeight:'bold'}}>{title}</Text>
-      <Text style={{fontSize:12,color:colorSelected}}>{days}</Text>
+      <Text style={{paddingRight: 5, fontSize: 14, fontWeight: 'bold'}}>
+        {title}
+      </Text>
+      <Text style={{fontSize: 14, color: colorSelected}}>{days}</Text>
     </View>
   );
 };
@@ -14,22 +16,22 @@ export default LeaveSmallCard;
 const styles = StyleSheet.create({
   cardContainer: {
     backgroundColor: '#fff',
-    borderRadius: 20,
+    borderRadius: 5,
     marginTop: 10,
-    marginBottom:10,
-    paddingLeft: 20,
-    paddingTop:4,
-    paddingBottom:4,
-//    marginLeft:10,
-    paddingRight: 20,
+    marginBottom: 10,
+    paddingLeft: 10,
+    paddingTop: 4,
+    paddingBottom: 4,
+    //    marginLeft:10,
+    paddingRight: 10,
     // marginHorizontal: 16,
     fontFamily: 'Inter',
-    elevation: 10,
-    flexDirection:'row',
-    justifyContent:'space-around',
-    alignItems:'center',
+    elevation: 5,
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
     height: 45,
-    width:100
+    width: '48%',
   },
 
   headerText: {

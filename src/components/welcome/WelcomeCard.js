@@ -5,12 +5,13 @@ const WelcomeCard = ({firstName}) => {
   return (
     <Text
       style={{
-        alignSelf: 'center',
-        fontSize: 25,
+        // alignSelf: 'center',
+        fontSize: 24,
         fontWeight: 'bold',
         // padding: 15,
-        justifyContent: 'center',
-        alignItems: 'center',
+        position: 'absolute',
+        // justifyContent: 'center',
+        // alignItems: 'center',
         textTransform: 'uppercase',
       }}>
       WelCome, {firstName}!

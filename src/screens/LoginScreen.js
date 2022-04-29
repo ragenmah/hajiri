@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import LogoContainer from '../components/Login/LogoContainer';
 import {SafeAreaView, ScrollView, StyleSheet, View} from 'react-native';
 import PageInfoContainer from '../components/Login/component/PageInfoContainer';
@@ -11,8 +11,8 @@ import {handleRememberMe, postLoginUser} from '../redux/actions/authActions';
 const LoginScreen = ({navigation}) => {
   const dispatch = useDispatch();
   const {authReducers} = useSelector(state => state);
-  const postLogin = (username, password) =>
-    dispatch(postLoginUser(username, password));
+  const postLogin = (username, password, checked) =>
+    dispatch(postLoginUser(username, password, checked));
   const handleRememberme = checked => handleRememberMe(checked);
 
   return (

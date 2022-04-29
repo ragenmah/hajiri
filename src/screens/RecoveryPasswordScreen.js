@@ -15,13 +15,13 @@ const RecoveryPasswordScreen = () => {
       <ScrollView>
         <LogoContainer />
         <PageInfoContainer
-          title={'Password Recovery'}
-          description={`Please fill in the email you’ve used to create the account for Hajiri and we’ll send you a reser link.`}
+          title={'Account Recovery'}
+          description={`Please enter your email ID associated with Hajiri`}
         />
         <RecoveryBodyContainer />
       </ScrollView>
 
-       <FooterContainer />
+      <FooterContainer />
     </SafeAreaView>
   );
 };
@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
   scrollContainer: {
     flex: 1,
     justifyContent: 'space-between',
-    backgroundColor: '#E5E5E5',
+    backgroundColor: '#F9F9F9',
     position: 'relative',
   },
 });

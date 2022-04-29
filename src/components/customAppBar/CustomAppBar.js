@@ -1,55 +1,83 @@
-import React from 'react'
-import { AppBar, HStack, IconButton } from "@react-native-material/core";
-import Icon from 'react-native-vector-icons/Ionicons';
-import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { Text } from 'react-native-svg';
-import { StyleSheet, View } from 'react-native';
+import React, {useState} from 'react';
+import {StyleSheet, View, TouchableNativeFeedback, Image} from 'react-native';
+import WelcomeCard from '../welcome/WelcomeCard';
 
-const CustomAppBar = () => {
+const CustomAppBar = props => {
+  var SharedPreferences = require('react-native-shared-preferences');
+  const [firstname, setFirstName] = useState('');
+  const [image, setImage] = useState('');
+
+  SharedPreferences.getItems(['firstName', 'image'], function (values) {
+    console.log(values);
+    console.log(values[0]);
+    setFirstName(values[0]);
+    setImage(values[1]);
+  });
+
   return (
-    <AppBar
-    elevation={0}
-    color="#E5E5E5"
-    leading={props => (
-      <IconButton icon={props => <Icon name="menu" {...props} />} {...props} />
-    )}
-    trailing={props => (
-      <HStack style={{paddingRight:10}}>
-        <IconButton
-          icon={props => <Icon name="notifications-outline" {...props} />}
-          {...props}
-        />
-         <View style={styles.roundCard}>
-            <Text style={styles.graphValue}>92%</Text>
-          </View>
-      </HStack>
-    )}
-  />
-  )
-}
+    <View style={styles.headerRightStyle}>
+      <View style={styles.headerRight}>
+        {props.showWelcome === 'true' ? (
+          <WelcomeCard firstName={firstname} />
+        ) : (
+          <View></View>
+        )}
 
-export default CustomAppBar
+        <TouchableNativeFeedback
+          onPress={() => {
+            console.log(':hello');
+
+            props.sendDataToParent(!props.showDropdown);
+          }}
+          style={{left: '50%'}}>
+          <View style={styles.roundCard}>
+            {image != null ? (
+              <Image
+                source={{
+                  uri: image,
+                }}
+                style={{width: 36, height: 36, borderRadius: 100}}
+              />
+            ) : (
+              <Image
+                source={{
+                  uri: 'https://icon-library.com/images/no-user-image-icon/no-user-image-icon-27.jpg',
+                }}
+                style={{width: 36, height: 36, borderRadius: 100}}
+              />
+            )}
+          </View>
+        </TouchableNativeFeedback>
+      </View>
+    </View>
+  );
+};
+
+export default CustomAppBar;
 
 const styles = StyleSheet.create({
-   
-    roundGraphCard: {
-      position: 'absolute',
-      borderRadius: 100,
-      width: 100,
-      height: 100,
-      justifyContent: 'center',
-      alignItems: 'center',
-      padding: 10,
-      backgroundColor: '#F4E0FB',
-    },
-  
-    roundCard: {
-      borderRadius: 100,
-      width: 36,
-      height: 36,
-      backgroundColor: '#F4E0FB',
-    marginTop:8
-    },
-    
-  });
-  
+  headerRight: {
+    marginRight: 15,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginLeft: 25,
+    marginTop: 10,
+  },
+  headerRightStyle: {
+    width: '100%',
+    // alignItems: 'center',
+    // justifyContent: 'center',
+  },
+
+  roundCard: {
+    borderRadius: 100,
+    width: 36,
+    height: 36,
+    backgroundColor: '#F4E0FB',
+    marginLeft: 50,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginLeft: '90%',
+  },
+});
